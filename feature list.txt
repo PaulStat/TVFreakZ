@@ -1,0 +1,56 @@
+TV Listings view
+  - Days (current day -> latest date)
+  - Time slot select hour, gives a 2 hour slot eg. 10-2pm, 2pm-4pm etc.
+  - Select channels to view, order can be changed
+  - Programme
+    - Show progtitle
+    - Fills grid to correct point depending on duration
+    - Hover over programme brings up a Div
+      - Div shows programme title, time slot, description,
+        repeat, bnw, subtitled, deaf signed, new series, premiere, 
+        add to watch list. Link to more info
+    - Highlight any programmes that are in the watch list or feature a favourite director/performer
+  - Filters
+     - Show all subtitled programmes
+     - Show all deaf signed programmes
+     - Show all films
+     - Show all programmes of a specific genre
+
+
+More info page
+  - Programme title
+  - Episode / Subtitle
+  - Time slot
+  - Duration
+  - Year
+  - Film, widescreen, bnw, repeat, newseries, premiere, subtitles, deafsigned
+  - Description
+  - Genre
+  - Director - director name link to imdb/add to favourites
+  - Performers - performer name link to imdb/add to favourites
+  - List of other showings of same episode/programme
+  - Ability to share via social media
+
+Director page
+  List all programmes in next weeks by director
+  Ability to share list via social media
+
+Performer page
+  List all programmes in next weeks with performer
+  Ability to share list via social media
+
+User Profile
+   - username
+   - full name
+   - email
+   - password
+   - watch list
+   - fave directors
+   - fave performers
+   - notifications
+     - enable/disable notifications of upcoming programmes featuring faved director/performer
+   - manage watch list
+   - manage faved directors
+   - manage faved performers
+   - login via fb
+    
