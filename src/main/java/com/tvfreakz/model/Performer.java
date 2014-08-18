@@ -1,7 +1,7 @@
 /**
  * TVFreakZ (c) 2014 - Paul Statham
  */
-package com.tvfreakz.hibernate.entity;
+package com.tvfreakz.model;
 
 import java.util.Set;
 
