@@ -40,12 +40,12 @@ public class Programme {
   @GenericGenerator(name="increment", strategy="increment")
   private Long programmeId;
   
-  @Type(type="com.tvfreakz.hibernate.entity.Genre")
+  @Type(type="com.tvfreakz.model.Genre")
   @OneToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
   @JoinColumn(name="GENREID")
   private Genre genre;
   
-  @Type(type="com.tvfreakz.hibernate.entity.Director")
+  @Type(type="com.tvfreakz.model.Director")
   @OneToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
   @JoinColumn(name="DIRECTORID")
   private Director director;
