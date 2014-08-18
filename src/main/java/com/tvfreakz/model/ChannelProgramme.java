@@ -38,17 +38,17 @@ public class ChannelProgramme {
   @GenericGenerator(name="increment", strategy="increment")
   private Long channelProgrammeId;
   
-  @Type(type="com.tvfreakz.hibernate.entity.Channel")
+  @Type(type="com.tvfreakz.model.Channel")
   @OneToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
   @JoinColumn(name="CHANNELID")
   private Channel channel;
   
-  @Type(type="com.tvfreakz.hibernate.entity.Programme")
+  @Type(type="com.tvfreakz.model.Programme")
   @OneToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
   @JoinColumn(name="PROGRAMMEID")
   private Programme programme;
   
-  @Type(type="com.tvfreakz.hibernate.entity.Episode")
+  @Type(type="com.tvfreakz.model.Episode")
   @OneToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
   @JoinColumn(name="EPISODEID")
   private Episode episode;
