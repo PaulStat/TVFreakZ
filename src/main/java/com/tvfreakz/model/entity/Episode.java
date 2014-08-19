@@ -1,7 +1,7 @@
 /**
  * TVFreakZ (c) 2014 - Paul Statham
  */
-package com.tvfreakz.model;
+package com.tvfreakz.model.entity;
 
 import java.util.Set;
 
@@ -73,7 +73,7 @@ public class Episode {
   /**
    * @param episodeId the episodeId to set
    */
-  private void setEpisodeId(Long episodeId) {
+  public void setEpisodeId(Long episodeId) {
     this.episodeId = episodeId;
   }
 
@@ -87,7 +87,7 @@ public class Episode {
   /**
    * @param programme the programme to set
    */
-  private void setProgramme(Programme programme) {
+  public void setProgramme(Programme programme) {
     this.programme = programme;
   }
 
@@ -101,7 +101,7 @@ public class Episode {
   /**
    * @param director the director to set
    */
-  private void setDirector(Director director) {
+  public void setDirector(Director director) {
     this.director = director;
   }
 
@@ -115,7 +115,7 @@ public class Episode {
   /**
    * @param subtitle the subtitle to set
    */
-  private void setSubtitle(String subtitle) {
+  public void setSubtitle(String subtitle) {
     this.subtitle = subtitle;
   }
 
@@ -129,7 +129,7 @@ public class Episode {
   /**
    * @param episode the episode to set
    */
-  private void setEpisode(String episode) {
+  public void setEpisode(String episode) {
     this.episode = episode;
   }
 
@@ -143,7 +143,7 @@ public class Episode {
   /**
    * @param description the description to set
    */
-  private void setDescription(String description) {
+  public void setDescription(String description) {
     this.description = description;
   }
   
@@ -151,7 +151,7 @@ public class Episode {
     return performers;
   }
 
-  private void setPerformers(Set<Performer> performers) {
+  public void setPerformers(Set<Performer> performers) {
     this.performers = performers;
   }
 }

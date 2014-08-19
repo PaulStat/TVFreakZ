@@ -1,7 +1,7 @@
 /**
  * TVFreakZ (c) 2014 - Paul Statham
  */
-package com.tvfreakz.model;
+package com.tvfreakz.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,7 +38,7 @@ public class Channel {
     return channelId;
   }
 
-  private void setChannelId(Long channelId) {
+  public void setChannelId(Long channelId) {
     this.channelId = channelId;
   }
   
@@ -50,7 +50,7 @@ public class Channel {
     return channelName;
   }
   
-  private void setChannelName(String channelName) {
+  public void setChannelName(String channelName) {
     this.channelName = channelName;
   }
 

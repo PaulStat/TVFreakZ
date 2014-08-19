@@ -3,6 +3,8 @@
  */
 package com.tvfreakz.model;
 
+import com.tvfreakz.model.entity.Genre;
+
 /**
  * ChannelProgrammeFilter
  * @author pstatham

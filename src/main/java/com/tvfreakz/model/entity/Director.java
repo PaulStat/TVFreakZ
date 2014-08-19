@@ -1,7 +1,7 @@
 /**
  * TVFreakZ (c) 2014 - Paul Statham
  */
-package com.tvfreakz.model;
+package com.tvfreakz.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,7 +40,7 @@ public class Director {
     return directorId;
   }
   
-  private void setDirectorId(Long directorId) {
+  public void setDirectorId(Long directorId) {
     this.directorId = directorId;
   }
   
@@ -52,7 +52,7 @@ public class Director {
     return directorName;
   }
   
-  private void setDirectorName(String directorName) {
+  public void setDirectorName(String directorName) {
     this.directorName = directorName;
   }
 

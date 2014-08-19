@@ -1,7 +1,7 @@
 /**
  * TVFreakZ (c) 2014 - Paul Statham
  */
-package com.tvfreakz.model;
+package com.tvfreakz.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,7 +38,7 @@ public class Genre {
     return genreName;
   }
   
-  private void setGenreName(String genreName) {
+  public void setGenreName(String genreName) {
     this.genreName = genreName;
   }  
 
@@ -46,7 +46,7 @@ public class Genre {
     return genreId;
   }
   
-  private void setGenreId(Long genreId) {
+  public void setGenreId(Long genreId) {
     this.genreId = genreId;
   }
 

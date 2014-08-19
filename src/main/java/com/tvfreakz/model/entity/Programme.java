@@ -1,7 +1,7 @@
 /**
  * TVFreakZ (c) 2014 - Paul Statham
  */
-package com.tvfreakz.model;
+package com.tvfreakz.model.entity;
 
 import java.util.Date;
 import java.util.Set;
@@ -99,7 +99,7 @@ public class Programme {
   /**
    * @param programmeId the programmeId to set
    */
-  private void setProgrammeId(Long programmeId) {
+  public void setProgrammeId(Long programmeId) {
     this.programmeId = programmeId;
   }
 
@@ -113,7 +113,7 @@ public class Programme {
   /**
    * @param progTitle the progTitle to set
    */
-  private void setProgTitle(String progTitle) {
+  public void setProgTitle(String progTitle) {
     this.progTitle = progTitle;
   }
 
@@ -127,7 +127,7 @@ public class Programme {
   /**
    * @param year the year to set
    */
-  private void setYear(Date year) {
+  public void setYear(Date year) {
     this.year = year;
   }
 
@@ -141,7 +141,7 @@ public class Programme {
   /**
    * @param film the film to set
    */
-  private void setFilm(boolean film) {
+  public void setFilm(boolean film) {
     this.film = film;
   }
 
@@ -155,7 +155,7 @@ public class Programme {
   /**
    * @param wideScreen the wideScreen to set
    */
-  private void setWideScreen(boolean wideScreen) {
+  public void setWideScreen(boolean wideScreen) {
     this.wideScreen = wideScreen;
   }
 
@@ -169,7 +169,7 @@ public class Programme {
   /**
    * @param blackAndWhite the blackAndWhite to set
    */
-  private void setBlackAndWhite(boolean blackAndWhite) {
+  public void setBlackAndWhite(boolean blackAndWhite) {
     this.blackAndWhite = blackAndWhite;
   }
 
@@ -183,21 +183,21 @@ public class Programme {
   /**
    * @param certificate the certificate to set
    */
-  private void setCertificate(String certificate) {
+  public void setCertificate(String certificate) {
     this.certificate = certificate;
   }
 
   /**
    * @param genre the genre to set
    */
-  private void setGenre(Genre genre) {
+  public void setGenre(Genre genre) {
     this.genre = genre;
   }
 
   /**
    * @param director the director to set
    */
-  private void setDirector(Director director) {
+  public void setDirector(Director director) {
     this.director = director;
   }
   
@@ -205,7 +205,7 @@ public class Programme {
     return performers;
   }
   
-  private void setPerformers(Set<Performer> performers) {
+  public void setPerformers(Set<Performer> performers) {
     this.performers = performers;
   }
   
@@ -213,7 +213,7 @@ public class Programme {
     return description;
   }
   
-  private void setDescription(String description) {
+  public void setDescription(String description) {
     this.description = description;
   }
 

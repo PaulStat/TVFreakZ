@@ -1,7 +1,7 @@
 /**
  * TVFreakZ (c) 2014 - Paul Statham
  */
-package com.tvfreakz.model;
+package com.tvfreakz.model.entity;
 
 import java.util.Set;
 
@@ -45,7 +45,7 @@ public class Performer {
     return performer;
   }
   
-  private void setPerformer(String performer) {
+  public void setPerformer(String performer) {
     this.performer = performer;
   }
   
@@ -53,7 +53,7 @@ public class Performer {
     return performerId;
   }
   
-  private void setPerformerId(Long performerId) {
+  public void setPerformerId(Long performerId) {
     this.performerId = performerId;
   }
   
@@ -66,7 +66,7 @@ public class Performer {
     return programmes;
   }
   
-  private void setProgrammes(Set<Programme> programmes) {
+  public void setProgrammes(Set<Programme> programmes) {
     this.programmes = programmes;
   }
 

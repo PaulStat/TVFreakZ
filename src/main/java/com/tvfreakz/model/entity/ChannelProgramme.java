@@ -1,7 +1,7 @@
 /**
  * TVFreakZ (c) 2014 - Paul Statham
  */
-package com.tvfreakz.model;
+package com.tvfreakz.model.entity;
 
 import java.util.Date;
 
@@ -95,7 +95,7 @@ public class ChannelProgramme {
   /**
    * @param channelProgrammeId the channelProgrammeId to set
    */
-  private void setChannelProgrammeId(Long channelProgrammeId) {
+  public void setChannelProgrammeId(Long channelProgrammeId) {
     this.channelProgrammeId = channelProgrammeId;
   }
 
@@ -109,7 +109,7 @@ public class ChannelProgramme {
   /**
    * @param channel the channel to set
    */
-  private void setChannel(Channel channel) {
+  public void setChannel(Channel channel) {
     this.channel = channel;
   }
 
@@ -123,7 +123,7 @@ public class ChannelProgramme {
   /**
    * @param programme the programme to set
    */
-  private void setProgramme(Programme programme) {
+  public void setProgramme(Programme programme) {
     this.programme = programme;
   }
 
@@ -137,7 +137,7 @@ public class ChannelProgramme {
   /**
    * @param episode the episode to set
    */
-  private void setEpisode(Episode episode) {
+  public void setEpisode(Episode episode) {
     this.episode = episode;
   }
 
@@ -151,7 +151,7 @@ public class ChannelProgramme {
   /**
    * @param repeat the repeat to set
    */
-  private void setRepeat(boolean repeat) {
+  public void setRepeat(boolean repeat) {
     this.repeat = repeat;
   }
 
@@ -165,7 +165,7 @@ public class ChannelProgramme {
   /**
    * @param newSeries the newSeries to set
    */
-  private void setNewSeries(boolean newSeries) {
+  public void setNewSeries(boolean newSeries) {
     this.newSeries = newSeries;
   }
 
@@ -179,7 +179,7 @@ public class ChannelProgramme {
   /**
    * @param premiere the premiere to set
    */
-  private void setPremiere(boolean premiere) {
+  public void setPremiere(boolean premiere) {
     this.premiere = premiere;
   }
 
@@ -193,7 +193,7 @@ public class ChannelProgramme {
   /**
    * @param choice the choice to set
    */
-  private void setChoice(boolean choice) {
+  public void setChoice(boolean choice) {
     this.choice = choice;
   }
 
@@ -207,7 +207,7 @@ public class ChannelProgramme {
   /**
    * @param subtitles the subtitles to set
    */
-  private void setSubtitles(boolean subtitles) {
+  public void setSubtitles(boolean subtitles) {
     this.subtitles = subtitles;
   }
 
@@ -221,7 +221,7 @@ public class ChannelProgramme {
   /**
    * @param deafSigned the deafSigned to set
    */
-  private void setDeafSigned(boolean deafSigned) {
+  public void setDeafSigned(boolean deafSigned) {
     this.deafSigned = deafSigned;
   }
 
@@ -235,7 +235,7 @@ public class ChannelProgramme {
   /**
    * @param starRating the starRating to set
    */
-  private void setStarRating(Integer starRating) {
+  public void setStarRating(Integer starRating) {
     this.starRating = starRating;
   }
 
@@ -249,7 +249,7 @@ public class ChannelProgramme {
   /**
    * @param progDate the progDate to set
    */
-  private void setProgDate(Date progDate) {
+  public void setProgDate(Date progDate) {
     this.progDate = progDate;
   }
 
@@ -263,7 +263,7 @@ public class ChannelProgramme {
   /**
    * @param startTime the startTime to set
    */
-  private void setStartTime(Date startTime) {
+  public void setStartTime(Date startTime) {
     this.startTime = startTime;
   }
 
@@ -277,7 +277,7 @@ public class ChannelProgramme {
   /**
    * @param endTime the endTime to set
    */
-  private void setEndTime(Date endTime) {
+  public void setEndTime(Date endTime) {
     this.endTime = endTime;
   }
 
@@ -291,7 +291,7 @@ public class ChannelProgramme {
   /**
    * @param duration the duration to set
    */
-  private void setDuration(Integer duration) {
+  public void setDuration(Integer duration) {
     this.duration = duration;
   }
 
