@@ -14,6 +14,7 @@ import com.tvfreakz.model.dto.ChannelDTO;
 import com.tvfreakz.model.dto.ChannelProgrammeDTO;
 import com.tvfreakz.model.dto.DirectorDTO;
 import com.tvfreakz.model.dto.EpisodeDTO;
+import com.tvfreakz.model.dto.ProgrammeDTO;
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.service.ChannelProgrammeService;
 
@@ -46,8 +47,20 @@ public class ChannelProgrammeController {
       episodeDTO.setDescription(chanprog.getEpisode().getDescription());
       episodeDTO.setDirector(directorDTO);
       episodeDTO.setEpisode(chanprog.getEpisode().getEpisode());
-//      Set<PerformerDTO> perfomerDTO = new
-      episodeDTO.setPerformers(chanprog.getEpisode().getPerformers());
+      episodeDTO.setPerformers(null);
+      
+      ProgrammeDTO programmeDTO = new ProgrammeDTO();
+      programmeDTO.setBlackAndWhite(chanprog.getProgramme().isBlackAndWhite());
+      programmeDTO.setCertificate(chanprog.getProgramme().getCertificate());
+      programmeDTO.setDescription(chanprog.getProgramme().getDescription());
+      programmeDTO.setDirector(chanprog.getProgramme().getDirector());
+      programmeDTO.setFilm(chanprog.getProgramme().isFilm());
+      programmeDTO.setGenre(chanprog.getProgramme().getGenre());
+      programmeDTO.setPerformers(null);
+      programmeDTO.setProgrammeId(chanprog.getProgramme().getProgrammeId());
+      programmeDTO.setProgTitle(chanprog.getProgramme().getProgTitle());
+      programmeDTO.setWideScreen(chanprog.getProgramme().isWideScreen());
+      programmeDTO.setYear(chanprog.getProgramme().getYear());
       
       channelProgrammeDTO.setChannel(channelDTO);
       channelProgrammeDTO.setChannelProgrammeId(chanprog.getChannelProgrammeId());
@@ -55,11 +68,11 @@ public class ChannelProgrammeController {
       channelProgrammeDTO.setDeafSigned(chanprog.isDeafSigned());
       channelProgrammeDTO.setDuration(chanprog.getDuration());
       channelProgrammeDTO.setEndTime(chanprog.getEndTime());
-      channelProgrammeDTO.setEpisode(chanprog.getEpisode());
+      channelProgrammeDTO.setEpisode(episodeDTO);
       channelProgrammeDTO.setNewSeries(chanprog.isNewSeries());
       channelProgrammeDTO.setPremiere(chanprog.isPremiere());
       channelProgrammeDTO.setProgDate(chanprog.getProgDate());
-      channelProgrammeDTO.setProgramme(chanprog.getProgramme());
+      channelProgrammeDTO.setProgramme(programmeDTO);
       channelProgrammeDTO.setRepeat(chanprog.isRepeat());
       channelProgrammeDTO.setStarRating(chanprog.getStarRating());
       channelProgrammeDTO.setStartTime(chanprog.getStartTime());
