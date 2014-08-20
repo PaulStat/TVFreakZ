@@ -1,7 +1,8 @@
 package com.tvfreakz.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -11,8 +12,8 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -26,14 +27,14 @@ public class ChannelProgrammeServiceTest {
   
   private ChannelProgrammeService channelProgrammeService;
   
-  @Autowired
   private ChannelProgrammeRepository channelProgrammeRepositoryMock;
+  
+  ApplicationContext appContext = new ClassPathXmlApplicationContext("file:src/main/webapp/WEB-INF/config/servlet-config.xml");
   
   @Before
   public void setUp() {
-    Mockito.reset(channelProgrammeRepositoryMock);
-    
-    channelProgrammeService = new ChannelProgrammeServiceImpl();
+	channelProgrammeRepositoryMock = mock(ChannelProgrammeRepository.class);
+	channelProgrammeService = appContext.getBean("channelProgrammeService", ChannelProgrammeService.class);
   }
   
   @Test
