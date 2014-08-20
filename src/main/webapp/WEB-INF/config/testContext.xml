@@ -11,5 +11,9 @@
     <bean id="channelProgrammeService" name="channelProgrammeService" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.tvfreakz.service.ChannelProgrammeService"/>
     </bean>
+    
+    <bean id="channelProgrammeRepository" name="channelProgrammeRepository" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.tvfreakz.repository.ChannelProgrammeRepository"/>
+    </bean>
 
 </beans>

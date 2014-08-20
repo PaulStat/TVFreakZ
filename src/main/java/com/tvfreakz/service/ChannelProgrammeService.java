@@ -8,6 +8,8 @@ import com.tvfreakz.model.entity.Director;
 
 public interface ChannelProgrammeService {
 
-  List<ChannelProgramme> findByDirectorAndProgDateBetweenOrderByProgDateStartTimeAsc(Director ridley, Date fromDate, Date toDate);
+  List<ChannelProgramme> findByDirectorAndProgDateBetweenOrderByProgDateAscStartTimeAsc(Director ridley, Date fromDate, Date toDate);
+
+  List<ChannelProgramme> findByProgDateBetweenOrderByProgDateAscStartTimeAsc(Date fromDate, Date toDate);
 
 }

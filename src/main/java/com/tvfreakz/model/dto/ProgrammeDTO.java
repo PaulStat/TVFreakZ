@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.tvfreakz.model.entity.Director;
 import com.tvfreakz.model.entity.Genre;
+import com.tvfreakz.model.entity.Performer;
 
 public class ProgrammeDTO {
   
@@ -28,7 +29,7 @@ public class ProgrammeDTO {
   
   private String description;
   
-  private Set<PerformerDTO> performers;
+  private Set<Performer> performers;
 
   public String getCertificate() {
     return certificate;
@@ -46,7 +47,7 @@ public class ProgrammeDTO {
     return genre;
   }
 
-  public Set<PerformerDTO> getPerformers() {
+  public Set<Performer> getPerformers() {
     return performers;
   }
 
@@ -98,7 +99,7 @@ public class ProgrammeDTO {
     this.genre = genre;
   }
 
-  public void setPerformers(Set<PerformerDTO> performers) {
+  public void setPerformers(Set<Performer> performers) {
     this.performers = performers;
   }
 
