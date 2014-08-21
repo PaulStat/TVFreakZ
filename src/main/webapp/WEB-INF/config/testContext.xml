@@ -8,11 +8,16 @@
         <property name="useCodeAsDefaultMessage" value="true"/>
     </bean>
  
-    <bean id="channelProgrammeService" name="channelProgrammeService" class="org.mockito.Mockito" factory-method="mock">
+    <bean id="channelProgrammeServiceMock" name="channelProgrammeServiceMock" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.tvfreakz.service.ChannelProgrammeService"/>
     </bean>
     
-    <bean id="channelProgrammeRepository" name="channelProgrammeRepository" class="org.mockito.Mockito" factory-method="mock">
+    <bean id="channelProgrammeService" name="channelProgrammeService" class="com.tvfreakz.service.ChannelProgrammeServiceImpl">
+    	<property name="channelProgrammeRepository" ref="channelProgrammeRepositoryMock"/>
+    </bean>
+    
+        
+    <bean id="channelProgrammeRepositoryMock" name="channelProgrammeRepositoryMock" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.tvfreakz.repository.ChannelProgrammeRepository"/>
     </bean>
 

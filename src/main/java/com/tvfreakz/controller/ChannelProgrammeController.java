@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tvfreakz.exception.DirectorNotFoundException;
 import com.tvfreakz.model.dto.ChannelDTO;
 import com.tvfreakz.model.dto.ChannelProgrammeDTO;
 import com.tvfreakz.model.dto.DirectorDTO;
@@ -23,8 +24,12 @@ import com.tvfreakz.service.ChannelProgrammeService;
 @Controller
 public class ChannelProgrammeController {
 
-  @Autowired
   private ChannelProgrammeService channelProgrammeService;
+  
+  @Autowired
+  public void setChannelProgrammeService(ChannelProgrammeService channelProgrammeService) {
+    this.channelProgrammeService = channelProgrammeService;
+  }
 
   @ResponseBody
   @RequestMapping(value = "/api/all", method = RequestMethod.GET)
@@ -37,10 +42,10 @@ public class ChannelProgrammeController {
 
   @ResponseBody
   @RequestMapping(value = "/api/directorshowings/{id}", method = RequestMethod.GET)
-  public List<ChannelProgrammeDTO> findByDirectorAndProgDateBetweenOrderByProgDateStartTimeAsc(@PathVariable("id") Long id) {
+  public List<ChannelProgrammeDTO> findScheduledDirectorProgrammes(@PathVariable("id") Long id) throws DirectorNotFoundException {
     Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
     Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
-    List<ChannelProgramme> chanprogs = channelProgrammeService.findByDirectorAndProgDateBetweenOrderByProgDateAscStartTimeAsc(null, today, twoWeeks);
+    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledDirectorProgrammes(id, today, twoWeeks);
     return createDTO(chanprogs);
   }
 

@@ -7,19 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tvfreakz.model.entity.ChannelProgramme;
-import com.tvfreakz.model.entity.Director;
 import com.tvfreakz.repository.ChannelProgrammeRepository;
 
 @Service("channelProgrammeService")
 public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
   
-  @Autowired
   private ChannelProgrammeRepository channelProgrammeRepository;
+  
+  @Autowired
+  public void setChannelProgrammeRepository(ChannelProgrammeRepository channelProgrammeRepository) {
+    this.channelProgrammeRepository = channelProgrammeRepository;
+  }
 
   @Override
-  public List<ChannelProgramme> findByDirectorAndProgDateBetweenOrderByProgDateAscStartTimeAsc(Director ridley, Date fromDate, Date toDate) {
-    // TODO Auto-generated method stub
-    return null;
+  public List<ChannelProgramme> findScheduledDirectorProgrammes(Long directorID, Date fromDate, Date toDate) {
+    return channelProgrammeRepository.findScheduledDirectorProgrammes(directorID, fromDate, toDate);
   }
 
   @Override

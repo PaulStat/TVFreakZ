@@ -1,0 +1,13 @@
+List of channel programmes
+Click on a programme
+Show programme details including Director
+Click on Director
+Show list of programmes by director in next two weeks
+
+GET /api/all
+GET /api/programme/{id}
+GET /api/directorshowings/{id}
+@Query("Select new com.tvfreakz.model.ChannelProgramme() from ChannelProgramme cp, Programme p
+where (cp.programme.programmeId = p.programmeId) AND (programme.director.directorId = :id) AND (cp.progDate BETWEEN :fromDate AND :toDate)
+ORDER BY cp.progDate, cp.startTime")
+public List<ChannelProgramme> findScheduledDirectorProgrammes(@Param("id") Long id,@Param("fromDate") Date fromDate,@Param("toDate") Date toDate)

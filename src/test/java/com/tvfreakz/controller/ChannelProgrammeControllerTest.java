@@ -18,6 +18,7 @@ import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -35,17 +36,18 @@ import com.tvfreakz.service.ChannelProgrammeService;
 import com.tvfreakz.util.TestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/config/testContext.xml", "file:src/main/webapp/WEB-INF/config/servlet-config.xml"})
+@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/config/testMVCContext.xml", "file:src/main/webapp/WEB-INF/config/servlet-config.xml"})
 @WebAppConfiguration
 public class ChannelProgrammeControllerTest {
 
   private MockMvc mockMvc;
+  
+  @Autowired
+  private ChannelProgrammeService channelProgrammeServiceMock;  
 
   @Autowired
-  private ChannelProgrammeService channelProgrammeServiceMock;
-
-  @Autowired
-  private WebApplicationContext webApplicationContext;  
+  private WebApplicationContext webApplicationContext; 
+  
 
   @Before
   public void setUp() {
@@ -83,12 +85,12 @@ public class ChannelProgrammeControllerTest {
     ChannelProgramme[] channelProgrammesAll = TestUtil.createChannelProgrammeTestData();
     Director ridley = channelProgrammesAll[1].getProgramme().getDirector();
     
-    ChannelProgramme[] channelProgrammeForDirector = new ChannelProgramme[]{channelProgrammesAll[1], channelProgrammesAll[2]};
+    ChannelProgramme[] channelProgrammeForDirector = new ChannelProgramme[]{channelProgrammesAll[0], channelProgrammesAll[2]};
     
     Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
     Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
 
-    when(channelProgrammeServiceMock.findByDirectorAndProgDateBetweenOrderByProgDateAscStartTimeAsc(ridley, today,
+    when(channelProgrammeServiceMock.findScheduledDirectorProgrammes(1L, today,
         twoWeeks)).thenReturn(Arrays.asList(channelProgrammeForDirector));
 
     mockMvc.perform(get("/api/directorshowings/{id}", 1L))
@@ -99,9 +101,15 @@ public class ChannelProgrammeControllerTest {
     .andExpect(jsonPath("$[0].programme.progTitle", is("Alien")))    
     .andExpect(jsonPath("$[1].programme.progTitle", is("Blade Runner")));
 
-    verify(channelProgrammeServiceMock, times(1)).findByDirectorAndProgDateBetweenOrderByProgDateAscStartTimeAsc(ridley, new DateTime().toDate(),
-        new DateTime().plusWeeks(2).toDate());
+    verify(channelProgrammeServiceMock, times(1)).findScheduledDirectorProgrammes(1L, today,
+        twoWeeks);
     verifyNoMoreInteractions(channelProgrammeServiceMock);
+  }
+  
+  @Ignore
+  @Test
+  public void testFindAllProgrammesByDirectorWhenDirectorIsNotFound() throws Exception {
+    //TODO
   }
 
 

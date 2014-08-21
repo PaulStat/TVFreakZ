@@ -1,7 +1,6 @@
 package com.tvfreakz.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -22,18 +21,18 @@ import com.tvfreakz.repository.ChannelProgrammeRepository;
 import com.tvfreakz.util.TestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/config/testContext.xml", "file:src/main/webapp/WEB-INF/config/servlet-config.xml"})
+@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/config/testContext.xml"})
 public class ChannelProgrammeServiceTest {
   
   private ChannelProgrammeService channelProgrammeService;
   
   private ChannelProgrammeRepository channelProgrammeRepositoryMock;
   
-  ApplicationContext appContext = new ClassPathXmlApplicationContext("file:src/main/webapp/WEB-INF/config/servlet-config.xml");
+  ApplicationContext appContext = new ClassPathXmlApplicationContext("file:src/main/webapp/WEB-INF/config/testContext.xml");
   
   @Before
   public void setUp() {
-	channelProgrammeRepositoryMock = mock(ChannelProgrammeRepository.class);
+	channelProgrammeRepositoryMock = appContext.getBean("channelProgrammeRepositoryMock",ChannelProgrammeRepository.class);
 	channelProgrammeService = appContext.getBean("channelProgrammeService", ChannelProgrammeService.class);
   }
   
