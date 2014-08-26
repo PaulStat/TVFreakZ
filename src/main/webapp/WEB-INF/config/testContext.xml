@@ -20,5 +20,14 @@
     <bean id="channelProgrammeRepositoryMock" name="channelProgrammeRepositoryMock" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.tvfreakz.repository.ChannelProgrammeRepository"/>
     </bean>
+    
+    <bean id="directorService" name="directorService" class="com.tvfreakz.service.DirectorServiceImpl">
+    	<property name="directorRepository" ref="directorRepositoryMock"/>
+    </bean>
+    
+        
+    <bean id="directorRepositoryMock" name="directorRepositoryMock" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.tvfreakz.repository.DirectorRepository"/>
+    </bean>
 
 </beans>

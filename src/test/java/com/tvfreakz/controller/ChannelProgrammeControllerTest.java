@@ -1,3 +1,6 @@
+/**
+ * TVFreakZ (c) 2014 - Paul Statham
+ */
 package com.tvfreakz.controller;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -13,12 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
-import java.util.Date;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -30,9 +29,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.tvfreakz.exception.DirectorNotFoundException;
 import com.tvfreakz.model.entity.ChannelProgramme;
-import com.tvfreakz.model.entity.Director;
 import com.tvfreakz.service.ChannelProgrammeService;
+import com.tvfreakz.service.DirectorService;
 import com.tvfreakz.util.TestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -40,10 +40,13 @@ import com.tvfreakz.util.TestUtil;
 @WebAppConfiguration
 public class ChannelProgrammeControllerTest {
 
-  private MockMvc mockMvc;
+  private MockMvc mockMvc;  
   
   @Autowired
-  private ChannelProgrammeService channelProgrammeServiceMock;  
+  private ChannelProgrammeService channelProgrammeServiceMock;
+  
+  @Autowired
+  private DirectorService directorServiceMock;
 
   @Autowired
   private WebApplicationContext webApplicationContext; 
@@ -52,19 +55,16 @@ public class ChannelProgrammeControllerTest {
   @Before
   public void setUp() {
     Mockito.reset(channelProgrammeServiceMock);
+    Mockito.reset(directorServiceMock);
 
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();    
   }
 
   @Test
-  public void testFindAllProgrammes() throws Exception {
-    ChannelProgramme[] channelProgrammes = TestUtil.createChannelProgrammeTestData();
-    
-    Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
-    Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
+  public void testScheduledProgrammes() throws Exception {    
 
-    when(channelProgrammeServiceMock.findByProgDateBetweenOrderByProgDateAscStartTimeAsc(today,
-        twoWeeks)).thenReturn(Arrays.asList(channelProgrammes));
+    when(channelProgrammeServiceMock.findScheduledProgrammes(TestUtil.TODAY,
+        TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(TestUtil.CHANNEL_PROGRAMMES));
 
     mockMvc.perform(get("/api/all"))
     .andDo(print())
@@ -75,23 +75,17 @@ public class ChannelProgrammeControllerTest {
     .andExpect(jsonPath("$[1].programme.progTitle", is("Aliens")))
     .andExpect(jsonPath("$[2].programme.progTitle", is("Blade Runner")));
 
-    verify(channelProgrammeServiceMock, times(1)).findByProgDateBetweenOrderByProgDateAscStartTimeAsc(today, twoWeeks);
+    verify(channelProgrammeServiceMock, times(1)).findScheduledProgrammes(TestUtil.TODAY, TestUtil.TWO_WEEKS);
     verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
 
   @Test
-  public void testFindAllProgrammesByDirectorWhenDirectorIsFound() throws Exception {
-
-    ChannelProgramme[] channelProgrammesAll = TestUtil.createChannelProgrammeTestData();
-    Director ridley = channelProgrammesAll[1].getProgramme().getDirector();
+  public void testFindScheduledDirectorProgrammesWhenDirectorIsFound() throws Exception {    
     
-    ChannelProgramme[] channelProgrammeForDirector = new ChannelProgramme[]{channelProgrammesAll[0], channelProgrammesAll[2]};
+    ChannelProgramme[] channelProgrammeForDirector = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[0], TestUtil.CHANNEL_PROGRAMMES[2]};
     
-    Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
-    Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
-
-    when(channelProgrammeServiceMock.findScheduledDirectorProgrammes(1L, today,
-        twoWeeks)).thenReturn(Arrays.asList(channelProgrammeForDirector));
+    when(channelProgrammeServiceMock.findScheduledDirectorProgrammes(1L, TestUtil.TODAY,
+        TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForDirector));
 
     mockMvc.perform(get("/api/directorshowings/{id}", 1L))
     .andDo(print())
@@ -101,15 +95,39 @@ public class ChannelProgrammeControllerTest {
     .andExpect(jsonPath("$[0].programme.progTitle", is("Alien")))    
     .andExpect(jsonPath("$[1].programme.progTitle", is("Blade Runner")));
 
-    verify(channelProgrammeServiceMock, times(1)).findScheduledDirectorProgrammes(1L, today,
-        twoWeeks);
+    verify(channelProgrammeServiceMock, times(1)).findScheduledDirectorProgrammes(1L, TestUtil.TODAY,
+        TestUtil.TWO_WEEKS);
     verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
   
-  @Ignore
   @Test
-  public void testFindAllProgrammesByDirectorWhenDirectorIsNotFound() throws Exception {
-    //TODO
+  public void testFindScheduledDirectorProgrammesWhenDirectorIsNotFound() throws Exception {
+    
+    when(directorServiceMock.findByDirectorId(3L)).thenThrow(new DirectorNotFoundException());
+    
+    mockMvc.perform(get("/api/directorshowings/{id}", 3L))
+            .andExpect(status().isNotFound());
+
+    verify(directorServiceMock, times(1)).findByDirectorId(3L);
+    verifyNoMoreInteractions(directorServiceMock);
+  }  
+  
+  @Test
+  public void testFindScheduledDirectorProgrammesWhenNoScheduledProgrammes() throws Exception {
+    ChannelProgramme[] channelProgrammeForDirector = new ChannelProgramme[]{};
+    
+    when(channelProgrammeServiceMock.findScheduledDirectorProgrammes(1L, TestUtil.TODAY,
+        TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForDirector));
+
+    mockMvc.perform(get("/api/directorshowings/{id}", 1L))
+    .andDo(print())
+    .andExpect(status().isOk())
+    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    .andExpect(jsonPath("$", hasSize(0)));
+
+    verify(channelProgrammeServiceMock, times(1)).findScheduledDirectorProgrammes(1L, TestUtil.TODAY,
+        TestUtil.TWO_WEEKS);
+    verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
 
 

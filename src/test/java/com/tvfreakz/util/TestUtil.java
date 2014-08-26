@@ -1,6 +1,10 @@
+/**
+ * TVFreakZ (c) 2014 - Paul Statham
+ */
 package com.tvfreakz.util;
 
 import java.nio.charset.Charset;
+import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -14,13 +18,18 @@ import com.tvfreakz.model.entity.Genre;
 import com.tvfreakz.model.entity.Programme;
 
 public class TestUtil {
+  
+  public static final Date TODAY = new LocalDate().toDateTimeAtStartOfDay().toDate();
+  public static final Date TWO_WEEKS = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
 
   public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
       MediaType.APPLICATION_JSON.getSubtype(),                        
       Charset.forName("utf8")                     
       );
+  
+  public static final ChannelProgramme[] CHANNEL_PROGRAMMES = createChannelProgrammeTestData();
 
-  public static ChannelProgramme[] createChannelProgrammeTestData() {
+  private static ChannelProgramme[] createChannelProgrammeTestData() {
     Director ridleyScott = new Director();
     ridleyScott.setDirectorId(1L);
     ridleyScott.setDirectorName("Ridley Scott");

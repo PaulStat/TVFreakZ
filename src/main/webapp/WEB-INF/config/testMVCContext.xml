@@ -10,6 +10,10 @@
  
     <bean id="channelProgrammeService" name="channelProgrammeServiceMock" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.tvfreakz.service.ChannelProgrammeService"/>
-    </bean>   
+    </bean>
+    
+    <bean id="directorService" name="directorServiceMock" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.tvfreakz.service.DirectorService"/>
+    </bean>
 
 </beans>

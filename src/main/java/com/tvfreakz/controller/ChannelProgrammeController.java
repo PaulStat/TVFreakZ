@@ -1,3 +1,6 @@
+/**
+ * TVFreakZ (c) 2014 - Paul Statham
+ */
 package com.tvfreakz.controller;
 
 import java.util.ArrayList;
@@ -20,15 +23,22 @@ import com.tvfreakz.model.dto.EpisodeDTO;
 import com.tvfreakz.model.dto.ProgrammeDTO;
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.service.ChannelProgrammeService;
+import com.tvfreakz.service.DirectorService;
 
 @Controller
 public class ChannelProgrammeController {
 
   private ChannelProgrammeService channelProgrammeService;
+  private DirectorService directorService;
   
   @Autowired
   public void setChannelProgrammeService(ChannelProgrammeService channelProgrammeService) {
     this.channelProgrammeService = channelProgrammeService;
+  }
+  
+  @Autowired
+  public void setDirectorService(DirectorService directorService) {
+    this.directorService = directorService;
   }
 
   @ResponseBody
@@ -36,13 +46,16 @@ public class ChannelProgrammeController {
   public List<ChannelProgrammeDTO> findByProgDateBetweenOrderByProgDateAscStartTimeAsc() {
     Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
     Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
-    List<ChannelProgramme> chanprogs = channelProgrammeService.findByProgDateBetweenOrderByProgDateAscStartTimeAsc(today, twoWeeks);
+    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledProgrammes(today, twoWeeks);
     return createDTO(chanprogs);
   }
 
   @ResponseBody
   @RequestMapping(value = "/api/directorshowings/{id}", method = RequestMethod.GET)
   public List<ChannelProgrammeDTO> findScheduledDirectorProgrammes(@PathVariable("id") Long id) throws DirectorNotFoundException {
+    //First check that a director with the specified id exists
+    //if it does not then the DirectorService will throw a DirectorNotFoundException
+    directorService.findByDirectorId(id);
     Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
     Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
     List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledDirectorProgrammes(id, today, twoWeeks);

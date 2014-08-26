@@ -1,3 +1,6 @@
+/**
+ * TVFreakZ (c) 2014 - Paul Statham
+ */
 package com.tvfreakz.service;
 
 import java.util.Date;
@@ -17,15 +20,16 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
   @Autowired
   public void setChannelProgrammeRepository(ChannelProgrammeRepository channelProgrammeRepository) {
     this.channelProgrammeRepository = channelProgrammeRepository;
-  }
+  }  
 
   @Override
   public List<ChannelProgramme> findScheduledDirectorProgrammes(Long directorID, Date fromDate, Date toDate) {
-    return channelProgrammeRepository.findScheduledDirectorProgrammes(directorID, fromDate, toDate);
+    List<ChannelProgramme> channelProgrammes = channelProgrammeRepository.findScheduledDirectorProgrammes(directorID, fromDate, toDate);
+    return channelProgrammes;
   }
 
   @Override
-  public List<ChannelProgramme> findByProgDateBetweenOrderByProgDateAscStartTimeAsc(Date fromDate, Date toDate) {    
+  public List<ChannelProgramme> findScheduledProgrammes(Date fromDate, Date toDate) {    
     return channelProgrammeRepository.findByProgDateBetweenOrderByProgDateAscStartTimeAsc(fromDate, toDate);
   }
 

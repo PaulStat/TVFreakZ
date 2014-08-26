@@ -1,13 +1,14 @@
+/**
+ * TVFreakZ (c) 2014 - Paul Statham
+ */
 package com.tvfreakz.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,29 +29,48 @@ public class ChannelProgrammeServiceTest {
   
   private ChannelProgrammeRepository channelProgrammeRepositoryMock;
   
-  ApplicationContext appContext = new ClassPathXmlApplicationContext("file:src/main/webapp/WEB-INF/config/testContext.xml");
+  private static final ApplicationContext APP_CONTEXT = new ClassPathXmlApplicationContext("file:src/main/webapp/WEB-INF/config/testContext.xml");  
   
   @Before
   public void setUp() {
-	channelProgrammeRepositoryMock = appContext.getBean("channelProgrammeRepositoryMock",ChannelProgrammeRepository.class);
-	channelProgrammeService = appContext.getBean("channelProgrammeService", ChannelProgrammeService.class);
+	channelProgrammeRepositoryMock = APP_CONTEXT.getBean("channelProgrammeRepositoryMock",ChannelProgrammeRepository.class);
+	channelProgrammeService = APP_CONTEXT.getBean("channelProgrammeService", ChannelProgrammeService.class);
   }
   
   @Test
-  public void testFindByProgDateBetweenOrderByProgDateAscStartTimeAsc() {
-    Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
-    Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
+  public void testFindScheduledProgrammes() {    
+    when(channelProgrammeRepositoryMock.findByProgDateBetweenOrderByProgDateAscStartTimeAsc(TestUtil.TODAY, TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(TestUtil.CHANNEL_PROGRAMMES));
     
-    ChannelProgramme[] channelProgramme = TestUtil.createChannelProgrammeTestData();
-    
-    when(channelProgrammeRepositoryMock.findByProgDateBetweenOrderByProgDateAscStartTimeAsc(today, twoWeeks)).thenReturn(Arrays.asList(channelProgramme));
-    
-    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findByProgDateBetweenOrderByProgDateAscStartTimeAsc(today, twoWeeks);
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledProgrammes(TestUtil.TODAY, TestUtil.TWO_WEEKS);
     
     assertEquals("Channel Programme List is of the wrong size", 3, channelProgrammeList.size());
     assertEquals("Alien", channelProgrammeList.get(0).getProgramme().getProgTitle());
     assertEquals("Aliens", channelProgrammeList.get(1).getProgramme().getProgTitle());
-    assertEquals("Blade Runner", channelProgrammeList.get(2).getProgramme().getProgTitle());
+    assertEquals("Blade Runner", channelProgrammeList.get(2).getProgramme().getProgTitle());    
+  }
+  
+  @Test
+  public void testFindScheduledDirectorProgrammesWhenDirectorIsFound() throws Exception {    
+    ChannelProgramme[] channelProgrammeForDirector = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[0], TestUtil.CHANNEL_PROGRAMMES[2]};
+    
+    when(channelProgrammeRepositoryMock.findScheduledDirectorProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForDirector));
+    
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledDirectorProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    
+    assertEquals("Channel Programme List is of the wrong size", 2, channelProgrammeList.size());
+    assertEquals("Alien", channelProgrammeList.get(0).getProgramme().getProgTitle());
+    assertEquals("Blade Runner", channelProgrammeList.get(1).getProgramme().getProgTitle());
+  }
+  
+  @Test
+  public void testFindScheduledDirectorProgrammesWhenNoScheduledProgrammes() {
+    ChannelProgramme[] channelProgrammeForDirector = new ChannelProgramme[]{};
+    
+    when(channelProgrammeRepositoryMock.findScheduledDirectorProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForDirector));
+    
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledDirectorProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    
+    assertEquals("Channel Programme List is of the wrong size", 0, channelProgrammeList.size());
   }
 
 }
