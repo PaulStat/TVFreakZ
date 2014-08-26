@@ -5,6 +5,7 @@ package com.tvfreakz.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -41,16 +43,16 @@ import com.tvfreakz.util.TestUtil;
 public class ChannelProgrammeControllerTest {
 
   private MockMvc mockMvc;  
-  
+
   @Autowired
   private ChannelProgrammeService channelProgrammeServiceMock;
-  
+
   @Autowired
   private DirectorService directorServiceMock;
 
   @Autowired
   private WebApplicationContext webApplicationContext; 
-  
+
 
   @Before
   public void setUp() {
@@ -81,9 +83,9 @@ public class ChannelProgrammeControllerTest {
 
   @Test
   public void testFindScheduledDirectorProgrammesWhenDirectorIsFound() throws Exception {    
-    
+
     ChannelProgramme[] channelProgrammeForDirector = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[0], TestUtil.CHANNEL_PROGRAMMES[2]};
-    
+
     when(channelProgrammeServiceMock.findScheduledDirectorProgrammes(1L, TestUtil.TODAY,
         TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForDirector));
 
@@ -99,23 +101,23 @@ public class ChannelProgrammeControllerTest {
         TestUtil.TWO_WEEKS);
     verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
-  
+
   @Test
   public void testFindScheduledDirectorProgrammesWhenDirectorIsNotFound() throws Exception {
-    
+
     when(directorServiceMock.findByDirectorId(3L)).thenThrow(new DirectorNotFoundException());
-    
+
     mockMvc.perform(get("/api/directorshowings/{id}", 3L))
-            .andExpect(status().isNotFound());
+    .andExpect(status().isNotFound());
 
     verify(directorServiceMock, times(1)).findByDirectorId(3L);
     verifyNoMoreInteractions(directorServiceMock);
   }  
-  
+
   @Test
   public void testFindScheduledDirectorProgrammesWhenNoScheduledProgrammes() throws Exception {
     ChannelProgramme[] channelProgrammeForDirector = new ChannelProgramme[]{};
-    
+
     when(channelProgrammeServiceMock.findScheduledDirectorProgrammes(1L, TestUtil.TODAY,
         TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForDirector));
 
@@ -130,5 +132,24 @@ public class ChannelProgrammeControllerTest {
     verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
 
+  @Test
+  public void testFindScheduledPerformerProgrammesWhenPerformerIsFound() throws Exception {
+    //TODO 
+    fail();
+  }
+
+  @Ignore
+  @Test
+  public void testFindScheduledPerformerProgrammesWhenPerformerIsNotFound() throws Exception {
+    //TODO
+    fail();
+  }
+
+  @Ignore
+  @Test
+  public void testFindScheduledPerformerProgrammesWhenNoScheduledProgrammes() throws Exception {
+    //TODO
+    fail();
+  }
 
 }

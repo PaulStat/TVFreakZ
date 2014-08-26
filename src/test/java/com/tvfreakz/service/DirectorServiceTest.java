@@ -1,12 +1,14 @@
 package com.tvfreakz.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.tvfreakz.exception.DirectorNotFoundException;
 import com.tvfreakz.model.entity.Director;
@@ -18,14 +20,12 @@ public class DirectorServiceTest {
   
   private DirectorRepository directorRepositoryMock;
   
-  private Director director;
-  
-  private static final ApplicationContext APP_CONTEXT = new ClassPathXmlApplicationContext("file:src/main/webapp/WEB-INF/config/testContext.xml");  
+  private Director director;  
   
   @Before
   public void setUp() {
-    directorRepositoryMock = APP_CONTEXT.getBean("directorRepositoryMock",DirectorRepository.class);
-    directorService = APP_CONTEXT.getBean("directorService", DirectorService.class);
+    directorRepositoryMock = mock(DirectorRepository.class);
+    directorService = new DirectorServiceImpl(directorRepositoryMock);
     director = new Director();
     director.setDirectorId(1L);
     director.setDirectorName("Ridley Scott");
@@ -37,14 +37,18 @@ public class DirectorServiceTest {
     
     Director actual = directorService.findByDirectorId(1L);
     
-    assertEquals(director, actual);    
+    assertEquals(director, actual);
+    verify(directorRepositoryMock, times(1)).findByDirectorId(1L);
+    verifyNoMoreInteractions(directorRepositoryMock);
   }
   
   @Test(expected = DirectorNotFoundException.class)
   public void testFindByDirectorIdWhenDirectorIsNotFound() throws Exception {
     when(directorRepositoryMock.findByDirectorId(1L)).thenReturn(null);
     
-    directorService.findByDirectorId(1L);    
+    directorService.findByDirectorId(1L);
+    verify(directorRepositoryMock, times(1)).findByDirectorId(1L);
+    verifyNoMoreInteractions(directorRepositoryMock);
   }
   
 

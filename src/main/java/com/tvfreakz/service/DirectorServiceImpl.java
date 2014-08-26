@@ -3,6 +3,8 @@
  */
 package com.tvfreakz.service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tvfreakz.exception.DirectorNotFoundException;
@@ -14,10 +16,11 @@ public class DirectorServiceImpl implements DirectorService {
   private DirectorRepository directorRepository;
   
   @Autowired
-  public void setDirectorRepository(DirectorRepository directorRepository) {
+  public DirectorServiceImpl(DirectorRepository directorRepository) {
     this.directorRepository = directorRepository;
-  }
+  }  
 
+  @Transactional(readOnly = true)
   @Override
   public Director findByDirectorId(Long directorId) throws DirectorNotFoundException {
     Director director = directorRepository.findByDirectorId(directorId);
