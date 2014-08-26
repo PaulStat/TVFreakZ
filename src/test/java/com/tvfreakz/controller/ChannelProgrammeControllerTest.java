@@ -133,9 +133,23 @@ public class ChannelProgrammeControllerTest {
   }
 
   @Test
-  public void testFindScheduledPerformerProgrammesWhenPerformerIsFound() throws Exception {
-    //TODO 
-    fail();
+  public void testFindScheduledPerformerProgrammesWhenPerformerIsFound() throws Exception {	  
+    ChannelProgramme[] channelProgrammeForPerformer = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[0], TestUtil.CHANNEL_PROGRAMMES[1]};
+	  
+	when(channelProgrammeServiceMock.findScheduledPerformerProgrammes(1L, TestUtil.TODAY,
+        TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForPerformer));
+	  
+    mockMvc.perform(get("/api/performershowings/{id}", 1L))
+    .andDo(print())
+    .andExpect(status().isOk())
+    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    .andExpect(jsonPath("$", hasSize(2)))
+    .andExpect(jsonPath("$[0].programme.progTitle", is("Alien")))    
+    .andExpect(jsonPath("$[1].programme.progTitle", is("Aliens")));
+	    
+    verify(channelProgrammeServiceMock, times(1)).findScheduledPerformerProgrammes(1L, TestUtil.TODAY,
+    	    TestUtil.TWO_WEEKS);
+    verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
 
   @Ignore

@@ -61,6 +61,12 @@ public class ChannelProgrammeController {
     List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledDirectorProgrammes(id, today, twoWeeks);
     return createDTO(chanprogs);
   }
+  
+  @ResponseBody
+  @RequestMapping(value = "/api/performershowings/{id}", method = RequestMethod.GET)
+  public List<ChannelProgrammeDTO> findScheduledPerformerProgrammes(@PathVariable("id") Long id) {
+    return null;
+  }
 
   private List<ChannelProgrammeDTO> createDTO(List<ChannelProgramme> chanprogs) {
     List<ChannelProgrammeDTO> chanprogDTOS = new ArrayList<>();

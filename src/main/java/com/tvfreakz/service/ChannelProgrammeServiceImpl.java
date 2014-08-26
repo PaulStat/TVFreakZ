@@ -36,4 +36,11 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
     return channelProgrammeRepository.findByProgDateBetweenOrderByProgDateAscStartTimeAsc(fromDate, toDate);
   }
 
+  @Transactional(readOnly = true)
+  @Override
+  public List<ChannelProgramme> findScheduledPerformerProgrammes(Long performerID, Date fromDate, Date toDate) {
+	// TODO Auto-generated method stub
+	return null;
+  }
+
 }

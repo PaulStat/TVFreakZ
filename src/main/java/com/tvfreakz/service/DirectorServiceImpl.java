@@ -25,7 +25,7 @@ public class DirectorServiceImpl implements DirectorService {
   public Director findByDirectorId(Long directorId) throws DirectorNotFoundException {
     Director director = directorRepository.findByDirectorId(directorId);
     if(director == null) {
-      throw new DirectorNotFoundException();
+      throw new DirectorNotFoundException("Director with an id of " +directorId +" was not found");
     }
     return director;    
   }
