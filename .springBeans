@@ -8,6 +8,7 @@
 	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
 		<config>src/main/resources/jpaContext.xml</config>
+		<config>src/main/webapp/WEB-INF/config/testContext.xml</config>
 		<config>src/main/webapp/WEB-INF/config/servlet-config.xml</config>
 		<config>src/main/webapp/WEB-INF/config/testContext.xml</config>
 	</configs>

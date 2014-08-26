@@ -10,6 +10,23 @@
 
 	<context:component-scan base-package="com.tvfreakz.controller" />
 
+	<bean id="exceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+			    <prop key="com.tvfreakz.exception.DirectorNotFoundException">error/404</prop>
+				<prop key="java.lang.Exception">error/error</prop>
+				<prop key="java.lang.RuntimeException">error/error</prop>
+			</props>
+		</property>
+		<property name="statusCodes">
+			<props>
+				<prop key="error/404">404</prop>
+				<prop key="error/error">500</prop>
+			</props>
+		</property>
+	</bean>
+
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" p:order="1" />
