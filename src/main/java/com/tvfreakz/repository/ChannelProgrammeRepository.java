@@ -31,6 +31,7 @@ public interface ChannelProgrammeRepository extends JpaRepository<ChannelProgram
       + " ORDER BY cp.progDate, cp.startTime")
   List<ChannelProgramme> findScheduledPerformerProgrammes(@Param("performerID") Long performerId, @Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
+  @Query("")
   List<ChannelProgramme> findScheduledChannelProgrammesForPeriod(Long channelID, Date from, Date to);
 
 }

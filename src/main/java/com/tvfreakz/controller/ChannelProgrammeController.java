@@ -3,6 +3,7 @@
  */
 package com.tvfreakz.controller;
 
+import java.text.spi.DateFormatProvider;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tvfreakz.exception.ChannelNotFoundException;
 import com.tvfreakz.exception.DirectorNotFoundException;
+import com.tvfreakz.exception.InvalidDateFormatException;
 import com.tvfreakz.exception.PerformerNotFoundException;
 import com.tvfreakz.model.dto.ChannelDTO;
 import com.tvfreakz.model.dto.ChannelProgrammeDTO;
@@ -62,7 +64,10 @@ public class ChannelProgrammeController {
   @ResponseBody
   @RequestMapping(value = "/api/channelshowings/{id}/{from}/{to}", method = RequestMethod.GET)
   public List<ChannelProgrammeDTO> findScheduledChannelProgrammesForPeriod(@PathVariable("id") Long id,
-      @PathVariable("from") String from, @PathVariable("to") String to) throws ChannelNotFoundException {
+      @PathVariable("from") String from, @PathVariable("to") String to) throws ChannelNotFoundException, InvalidDateFormatException  {
+	  if(!(DateTimeParameterValidator.validateDateTimeString(from) || DateTimeParameterValidator.validateDateTimeString(to))) {
+        throw new InvalidDateFormatException();
+	  }
     List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledChannelProgrammesForPeriod(id, from, to);
     return createDTO(chanprogs);
   }
