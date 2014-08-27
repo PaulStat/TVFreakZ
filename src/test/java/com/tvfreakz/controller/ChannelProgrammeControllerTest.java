@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,7 +77,7 @@ public class ChannelProgrammeControllerTest {
     .andDo(print())
     .andExpect(status().isOk())
     .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-    .andExpect(jsonPath("$", hasSize(3)))
+    .andExpect(jsonPath("$", hasSize(TestUtil.CHANNEL_PROGRAMMES.length)))
     .andExpect(jsonPath("$[0].programme.progTitle", is("Alien")))
     .andExpect(jsonPath("$[1].programme.progTitle", is("Aliens")))
     .andExpect(jsonPath("$[2].programme.progTitle", is("Blade Runner")));
@@ -183,6 +184,40 @@ public class ChannelProgrammeControllerTest {
     verify(channelProgrammeServiceMock, times(1)).findScheduledPerformerProgrammes(1L, TestUtil.TODAY,
             TestUtil.TWO_WEEKS);
     verifyNoMoreInteractions(channelProgrammeServiceMock);
+  }
+  
+  @Test
+  public void testFindScheduledChannelProgrammesForPeriodWhenChannelIsFound() throws Exception {
+    ChannelProgramme[] channelProgrammeForBBC2 = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[3]};
+    
+    when(channelProgrammeServiceMock.findScheduledChannelProgrammesForPeriod(2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT),
+        new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT))).thenReturn(Arrays.asList(channelProgrammeForBBC2));
+    
+    mockMvc.perform(get("/api/channelshowings/{id}/{from}/{to}", 2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT), new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT)))
+    .andDo(print())
+    .andExpect(status().isOk())
+    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    .andExpect(jsonPath("$", hasSize(1)))
+    .andExpect(jsonPath("$[0].programme.progTitle", is("Alien 3")));
+    
+    verify(channelProgrammeServiceMock, times(1)).findScheduledChannelProgrammesForPeriod(2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT),
+        new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT));
+    verifyNoMoreInteractions(channelProgrammeServiceMock);
+  }
+  
+  @Test
+  public void testFindScheduledChannelProgrammesForPeriodWhenRequestPathHasInvalidDateTimeFormat() throws Exception {
+    //TODO
+  }
+  
+  @Test
+  public void testFindScheduledChannelProgrammesForPeriodWhenChannelIsNotFound() throws Exception {
+    //TODO
+  }
+  
+  @Test
+  public void testFindScheduledChannelProgrammesForPeriodWhenNoScheduledProgrammes() throws Exception {
+    //TODO
   }
 
 }

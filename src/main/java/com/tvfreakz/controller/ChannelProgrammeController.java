@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tvfreakz.exception.ChannelNotFoundException;
 import com.tvfreakz.exception.DirectorNotFoundException;
 import com.tvfreakz.exception.PerformerNotFoundException;
 import com.tvfreakz.model.dto.ChannelDTO;
@@ -51,10 +52,18 @@ public class ChannelProgrammeController {
 
   @ResponseBody
   @RequestMapping(value = "/api/all", method = RequestMethod.GET)
-  public List<ChannelProgrammeDTO> findByProgDateBetweenOrderByProgDateAscStartTimeAsc() {
+  public List<ChannelProgrammeDTO> findScheduledProgrammes() {
     Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
     Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
     List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledProgrammes(today, twoWeeks);
+    return createDTO(chanprogs);
+  }
+  
+  @ResponseBody
+  @RequestMapping(value = "/api/channelshowings/{id}/{from}/{to}", method = RequestMethod.GET)
+  public List<ChannelProgrammeDTO> findScheduledChannelProgrammesForPeriod(@PathVariable("id") Long id,
+      @PathVariable("from") String from, @PathVariable("to") String to) throws ChannelNotFoundException {
+    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledChannelProgrammesForPeriod(id, from, to);
     return createDTO(chanprogs);
   }
 
