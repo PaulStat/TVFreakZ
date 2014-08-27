@@ -15,5 +15,9 @@
     <bean id="directorService" name="directorServiceMock" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.tvfreakz.service.DirectorService"/>
     </bean>
+    
+    <bean id="performerService" name="performerServiceMock" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.tvfreakz.service.PerformerService"/>
+    </bean>
 
 </beans>

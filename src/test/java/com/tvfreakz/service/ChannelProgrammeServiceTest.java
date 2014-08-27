@@ -4,6 +4,10 @@
 package com.tvfreakz.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -11,30 +15,21 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.repository.ChannelProgrammeRepository;
 import com.tvfreakz.util.TestUtil;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/config/testContext.xml"})
 public class ChannelProgrammeServiceTest {
   
   private ChannelProgrammeService channelProgrammeService;
   
-  private ChannelProgrammeRepository channelProgrammeRepositoryMock;
-  
-  private static final ApplicationContext APP_CONTEXT = new ClassPathXmlApplicationContext("file:src/main/webapp/WEB-INF/config/testContext.xml");  
+  private ChannelProgrammeRepository channelProgrammeRepositoryMock;  
   
   @Before
   public void setUp() {
-	channelProgrammeRepositoryMock = APP_CONTEXT.getBean("channelProgrammeRepositoryMock",ChannelProgrammeRepository.class);
-	channelProgrammeService = APP_CONTEXT.getBean("channelProgrammeService", ChannelProgrammeService.class);
+	channelProgrammeRepositoryMock = mock(ChannelProgrammeRepository.class);
+	channelProgrammeService = new ChannelProgrammeServiceImpl(channelProgrammeRepositoryMock);
   }
   
   @Test
@@ -60,6 +55,8 @@ public class ChannelProgrammeServiceTest {
     assertEquals("Channel Programme List is of the wrong size", 2, channelProgrammeList.size());
     assertEquals("Alien", channelProgrammeList.get(0).getProgramme().getProgTitle());
     assertEquals("Blade Runner", channelProgrammeList.get(1).getProgramme().getProgTitle());
+    verify(channelProgrammeRepositoryMock, times(1)).findScheduledDirectorProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);
   }
   
   @Test
@@ -71,6 +68,36 @@ public class ChannelProgrammeServiceTest {
     List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledDirectorProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
     
     assertEquals("Channel Programme List is of the wrong size", 0, channelProgrammeList.size());
+    verify(channelProgrammeRepositoryMock, times(1)).findScheduledDirectorProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);
+  }
+  
+  @Test
+  public void testFindScheduledPerformerProgrammesWhenPerformerIsFound() {
+    ChannelProgramme[] channelProgrammeForPerformer = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[0], TestUtil.CHANNEL_PROGRAMMES[1]};
+    
+    when(channelProgrammeRepositoryMock.findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForPerformer));
+    
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    
+    assertEquals("Channel Programme List is of the wrong size", 2, channelProgrammeList.size());
+    assertEquals("Alien", channelProgrammeList.get(0).getProgramme().getProgTitle());
+    assertEquals("Aliens", channelProgrammeList.get(1).getProgramme().getProgTitle());
+    verify(channelProgrammeRepositoryMock, times(1)).findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);
+  }
+  
+  @Test
+  public void testFindScheduledPerformerProgrammesWhenNoScheduledProgrammes() {
+    ChannelProgramme[] channelProgrammeForPerformer = new ChannelProgramme[]{};
+
+    when(channelProgrammeRepositoryMock.findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForPerformer));
+    
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    
+    assertEquals("Channel Programme List is of the wrong size", 0, channelProgrammeList.size());
+    verify(channelProgrammeRepositoryMock, times(1)).findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);
   }
 
 }

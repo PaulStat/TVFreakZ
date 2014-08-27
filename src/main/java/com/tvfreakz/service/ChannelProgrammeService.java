@@ -14,4 +14,6 @@ public interface ChannelProgrammeService {
 
   List<ChannelProgramme> findScheduledProgrammes(Date fromDate, Date toDate);
 
+  List<ChannelProgramme> findScheduledPerformerProgrammes(Long performerID, Date fromDate, Date toDate);
+
 }
