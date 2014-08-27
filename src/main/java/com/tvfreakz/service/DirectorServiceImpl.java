@@ -3,14 +3,15 @@
  */
 package com.tvfreakz.service;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tvfreakz.exception.DirectorNotFoundException;
 import com.tvfreakz.model.entity.Director;
 import com.tvfreakz.repository.DirectorRepository;
 
+@Service("directorService")
 public class DirectorServiceImpl implements DirectorService {
   
   private DirectorRepository directorRepository;

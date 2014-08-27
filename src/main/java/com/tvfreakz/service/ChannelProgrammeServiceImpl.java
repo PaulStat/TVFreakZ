@@ -25,9 +25,8 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<ChannelProgramme> findScheduledDirectorProgrammes(Long directorID, Date fromDate, Date toDate) {
-    List<ChannelProgramme> channelProgrammes = channelProgrammeRepository.findScheduledDirectorProgrammes(directorID, fromDate, toDate);
-    return channelProgrammes;
+  public List<ChannelProgramme> findScheduledDirectorProgrammes(Long directorID, Date fromDate, Date toDate) {    
+    return channelProgrammeRepository.findScheduledDirectorProgrammes(directorID, fromDate, toDate);
   }
 
   @Transactional(readOnly = true)
@@ -39,8 +38,7 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
   @Transactional(readOnly = true)
   @Override
   public List<ChannelProgramme> findScheduledPerformerProgrammes(Long performerID, Date fromDate, Date toDate) {
-	// TODO Auto-generated method stub
-	return null;
+	return channelProgrammeRepository.findScheduledPerformerProgrammes(performerID, fromDate, toDate);
   }
 
 }

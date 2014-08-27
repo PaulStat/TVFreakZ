@@ -71,5 +71,33 @@ public class ChannelProgrammeServiceTest {
     verify(channelProgrammeRepositoryMock, times(1)).findScheduledDirectorProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
     verifyNoMoreInteractions(channelProgrammeRepositoryMock);
   }
+  
+  @Test
+  public void testFindScheduledPerformerProgrammesWhenPerformerIsFound() {
+    ChannelProgramme[] channelProgrammeForPerformer = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[0], TestUtil.CHANNEL_PROGRAMMES[1]};
+    
+    when(channelProgrammeRepositoryMock.findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForPerformer));
+    
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    
+    assertEquals("Channel Programme List is of the wrong size", 2, channelProgrammeList.size());
+    assertEquals("Alien", channelProgrammeList.get(0).getProgramme().getProgTitle());
+    assertEquals("Aliens", channelProgrammeList.get(1).getProgramme().getProgTitle());
+    verify(channelProgrammeRepositoryMock, times(1)).findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);
+  }
+  
+  @Test
+  public void testFindScheduledPerformerProgrammesWhenNoScheduledProgrammes() {
+    ChannelProgramme[] channelProgrammeForPerformer = new ChannelProgramme[]{};
+
+    when(channelProgrammeRepositoryMock.findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForPerformer));
+    
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    
+    assertEquals("Channel Programme List is of the wrong size", 0, channelProgrammeList.size());
+    verify(channelProgrammeRepositoryMock, times(1)).findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);
+  }
 
 }

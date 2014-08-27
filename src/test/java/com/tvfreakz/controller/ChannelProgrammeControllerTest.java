@@ -5,7 +5,6 @@ package com.tvfreakz.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -19,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -32,9 +30,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.tvfreakz.exception.DirectorNotFoundException;
+import com.tvfreakz.exception.PerformerNotFoundException;
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.service.ChannelProgrammeService;
 import com.tvfreakz.service.DirectorService;
+import com.tvfreakz.service.PerformerService;
 import com.tvfreakz.util.TestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -49,6 +49,9 @@ public class ChannelProgrammeControllerTest {
 
   @Autowired
   private DirectorService directorServiceMock;
+  
+  @Autowired
+  private PerformerService performerServiceMock;
 
   @Autowired
   private WebApplicationContext webApplicationContext; 
@@ -58,12 +61,13 @@ public class ChannelProgrammeControllerTest {
   public void setUp() {
     Mockito.reset(channelProgrammeServiceMock);
     Mockito.reset(directorServiceMock);
+    Mockito.reset(performerServiceMock);
 
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();    
   }
 
   @Test
-  public void testScheduledProgrammes() throws Exception {    
+  public void testFindScheduledProgrammes() throws Exception {    
 
     when(channelProgrammeServiceMock.findScheduledProgrammes(TestUtil.TODAY,
         TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(TestUtil.CHANNEL_PROGRAMMES));
@@ -152,18 +156,33 @@ public class ChannelProgrammeControllerTest {
     verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
 
-  @Ignore
   @Test
   public void testFindScheduledPerformerProgrammesWhenPerformerIsNotFound() throws Exception {
-    //TODO
-    fail();
+    when(performerServiceMock.findByPerformerId(3L)).thenThrow(new PerformerNotFoundException());
+    
+    mockMvc.perform(get("/api/performershowings/{id}", 3L))
+    .andExpect(status().isNotFound());
+
+    verify(performerServiceMock, times(1)).findByPerformerId(3L);
+    verifyNoMoreInteractions(performerServiceMock);
   }
 
-  @Ignore
   @Test
   public void testFindScheduledPerformerProgrammesWhenNoScheduledProgrammes() throws Exception {
-    //TODO
-    fail();
+    ChannelProgramme[] channelProgrammeForPerformer = new ChannelProgramme[]{};
+    
+    when(channelProgrammeServiceMock.findScheduledPerformerProgrammes(1L, TestUtil.TODAY,
+        TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForPerformer));
+      
+    mockMvc.perform(get("/api/performershowings/{id}", 1L))
+    .andDo(print())
+    .andExpect(status().isOk())
+    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    .andExpect(jsonPath("$", hasSize(0)));
+        
+    verify(channelProgrammeServiceMock, times(1)).findScheduledPerformerProgrammes(1L, TestUtil.TODAY,
+            TestUtil.TWO_WEEKS);
+    verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
 
 }

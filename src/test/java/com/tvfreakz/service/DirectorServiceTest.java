@@ -32,7 +32,7 @@ public class DirectorServiceTest {
   }
   
   @Test
-  public void testFindByDirectorId() throws Exception {
+  public void testFindByDirectorIdWhenDirectorIsFound() throws Exception {
     when(directorRepositoryMock.findByDirectorId(1L)).thenReturn(director);
     
     Director actual = directorService.findByDirectorId(1L);

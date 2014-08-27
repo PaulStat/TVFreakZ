@@ -11,16 +11,23 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.tvfreakz.exception.DirectorNotFoundException;
+import com.tvfreakz.exception.PerformerNotFoundException;
 
 @ControllerAdvice
 public class RestErrorHandler {
-  
+
   private static final Logger LOGGER = LoggerFactory.getLogger(RestErrorHandler.class);
-  
+
   @ExceptionHandler(DirectorNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public void handleTodoNotFoundException(DirectorNotFoundException ex) {
-      LOGGER.debug("handling 404 error on a director entry");
+  public void handleDirectorNotFoundException(DirectorNotFoundException ex) {
+    LOGGER.debug("handling 404 error on a director entry");
+  }
+
+  @ExceptionHandler(PerformerNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public void handlePerformerNotFoundException(PerformerNotFoundException ex) {
+    LOGGER.debug("handling 404 error on a performer entry");
   }
 
 }

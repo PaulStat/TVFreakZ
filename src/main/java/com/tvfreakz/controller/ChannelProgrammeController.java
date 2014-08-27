@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tvfreakz.exception.DirectorNotFoundException;
+import com.tvfreakz.exception.PerformerNotFoundException;
 import com.tvfreakz.model.dto.ChannelDTO;
 import com.tvfreakz.model.dto.ChannelProgrammeDTO;
 import com.tvfreakz.model.dto.DirectorDTO;
@@ -24,21 +25,28 @@ import com.tvfreakz.model.dto.ProgrammeDTO;
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.service.ChannelProgrammeService;
 import com.tvfreakz.service.DirectorService;
+import com.tvfreakz.service.PerformerService;
 
 @Controller
 public class ChannelProgrammeController {
 
   private ChannelProgrammeService channelProgrammeService;
   private DirectorService directorService;
-  
+  private PerformerService performerService;
+
   @Autowired
   public void setChannelProgrammeService(ChannelProgrammeService channelProgrammeService) {
     this.channelProgrammeService = channelProgrammeService;
   }
-  
+
   @Autowired
   public void setDirectorService(DirectorService directorService) {
     this.directorService = directorService;
+  }
+  
+  @Autowired
+  public void setPerformerService(PerformerService performerService) {
+    this.performerService = performerService;
   }
 
   @ResponseBody
@@ -61,11 +69,17 @@ public class ChannelProgrammeController {
     List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledDirectorProgrammes(id, today, twoWeeks);
     return createDTO(chanprogs);
   }
-  
+
   @ResponseBody
   @RequestMapping(value = "/api/performershowings/{id}", method = RequestMethod.GET)
-  public List<ChannelProgrammeDTO> findScheduledPerformerProgrammes(@PathVariable("id") Long id) {
-    return null;
+  public List<ChannelProgrammeDTO> findScheduledPerformerProgrammes(@PathVariable("id") Long id) throws PerformerNotFoundException {
+    //First check that a performer with the specified id exists
+    //if it does not then the PerformerService will throw a DirectorNotFoundException
+    performerService.findByPerformerId(id);
+    Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
+    Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
+    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledPerformerProgrammes(id, today, twoWeeks);
+    return createDTO(chanprogs);
   }
 
   private List<ChannelProgrammeDTO> createDTO(List<ChannelProgramme> chanprogs) {
