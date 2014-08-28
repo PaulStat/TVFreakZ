@@ -3,6 +3,7 @@
  */
 package com.tvfreakz.controller;
 
+import java.text.spi.DateFormatProvider;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tvfreakz.exception.ChannelNotFoundException;
 import com.tvfreakz.exception.DirectorNotFoundException;
+import com.tvfreakz.exception.InvalidDateFormatException;
 import com.tvfreakz.exception.PerformerNotFoundException;
 import com.tvfreakz.model.dto.ChannelDTO;
 import com.tvfreakz.model.dto.ChannelProgrammeDTO;
@@ -24,6 +27,7 @@ import com.tvfreakz.model.dto.EpisodeDTO;
 import com.tvfreakz.model.dto.ProgrammeDTO;
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.service.ChannelProgrammeService;
+import com.tvfreakz.service.ChannelService;
 import com.tvfreakz.service.DirectorService;
 import com.tvfreakz.service.PerformerService;
 
@@ -33,6 +37,7 @@ public class ChannelProgrammeController {
   private ChannelProgrammeService channelProgrammeService;
   private DirectorService directorService;
   private PerformerService performerService;
+  private ChannelService channelService;
 
   @Autowired
   public void setChannelProgrammeService(ChannelProgrammeService channelProgrammeService) {
@@ -43,15 +48,20 @@ public class ChannelProgrammeController {
   public void setDirectorService(DirectorService directorService) {
     this.directorService = directorService;
   }
-  
+
   @Autowired
   public void setPerformerService(PerformerService performerService) {
     this.performerService = performerService;
   }
+  
+  @Autowired
+  public void setChannelService(ChannelService channelService) {
+    this.channelService = channelService;
+  }
 
   @ResponseBody
   @RequestMapping(value = "/api/all", method = RequestMethod.GET)
-  public List<ChannelProgrammeDTO> findByProgDateBetweenOrderByProgDateAscStartTimeAsc() {
+  public List<ChannelProgrammeDTO> findScheduledProgrammes() {
     Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
     Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
     List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledProgrammes(today, twoWeeks);
@@ -59,26 +69,41 @@ public class ChannelProgrammeController {
   }
 
   @ResponseBody
-  @RequestMapping(value = "/api/directorshowings/{id}", method = RequestMethod.GET)
-  public List<ChannelProgrammeDTO> findScheduledDirectorProgrammes(@PathVariable("id") Long id) throws DirectorNotFoundException {
-    //First check that a director with the specified id exists
-    //if it does not then the DirectorService will throw a DirectorNotFoundException
-    directorService.findByDirectorId(id);
-    Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
-    Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
-    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledDirectorProgrammes(id, today, twoWeeks);
+  @RequestMapping(value = "/api/channelshowings/{channelId}/{from}/{to}", method = RequestMethod.GET)
+  public List<ChannelProgrammeDTO> findScheduledChannelProgrammesForPeriod(@PathVariable("channelId") Long channelId,
+      @PathVariable("from") String from, @PathVariable("to") String to) throws ChannelNotFoundException, InvalidDateFormatException  {
+    //First check if the date request fields are valid
+    if(!(DateTimeParameterValidator.validateDateTimeString(from) || DateTimeParameterValidator.validateDateTimeString(to))) {
+      throw new InvalidDateFormatException();
+    }
+    //Now check the channel exists via the ChannelService, if it doesn't
+    //a ChannelNotFoundException is thrown
+    channelService.findByChannelId(channelId);
+    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledChannelProgrammesForPeriod(channelId, from, to);
     return createDTO(chanprogs);
   }
 
   @ResponseBody
-  @RequestMapping(value = "/api/performershowings/{id}", method = RequestMethod.GET)
-  public List<ChannelProgrammeDTO> findScheduledPerformerProgrammes(@PathVariable("id") Long id) throws PerformerNotFoundException {
-    //First check that a performer with the specified id exists
-    //if it does not then the PerformerService will throw a DirectorNotFoundException
-    performerService.findByPerformerId(id);
+  @RequestMapping(value = "/api/directorshowings/{directorId}", method = RequestMethod.GET)
+  public List<ChannelProgrammeDTO> findScheduledDirectorProgrammes(@PathVariable("directorId") Long directorId) throws DirectorNotFoundException {
+    //First check that a director with the specified id exists
+    //if it does not then the DirectorService will throw a DirectorNotFoundException
+    directorService.findByDirectorId(directorId);
     Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
     Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
-    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledPerformerProgrammes(id, today, twoWeeks);
+    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledDirectorProgrammes(directorId, today, twoWeeks);
+    return createDTO(chanprogs);
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/api/performershowings/{performerId}", method = RequestMethod.GET)
+  public List<ChannelProgrammeDTO> findScheduledPerformerProgrammes(@PathVariable("performerId") Long performerId) throws PerformerNotFoundException {
+    //First check that a performer with the specified id exists
+    //if it does not then the PerformerService will throw a DirectorNotFoundException
+    performerService.findByPerformerId(performerId);
+    Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
+    Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
+    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledPerformerProgrammes(performerId, today, twoWeeks);
     return createDTO(chanprogs);
   }
 

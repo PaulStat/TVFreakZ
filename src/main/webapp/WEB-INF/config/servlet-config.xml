@@ -15,6 +15,9 @@
 		<property name="exceptionMappings">
 			<props>
 			    <prop key="com.tvfreakz.exception.DirectorNotFoundException">error/404</prop>
+			    <prop key="com.tvfreakz.exception.PerformerNotFoundException">error/404</prop>
+			    <prop key="com.tvfreakz.exception.ChannelNotFoundException">error/404</prop>
+			    <prop key="com.tvfreakz.exception.InvalidDateFormatException">error/400</prop>
 				<prop key="java.lang.Exception">error/error</prop>
 				<prop key="java.lang.RuntimeException">error/error</prop>
 			</props>
@@ -22,6 +25,7 @@
 		<property name="statusCodes">
 			<props>
 				<prop key="error/404">404</prop>
+				<prop key="error/400">400</prop>
 				<prop key="error/error">500</prop>
 			</props>
 		</property>

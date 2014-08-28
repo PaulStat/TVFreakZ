@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +39,7 @@ public class ChannelProgrammeServiceTest {
     
     List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledProgrammes(TestUtil.TODAY, TestUtil.TWO_WEEKS);
     
-    assertEquals("Channel Programme List is of the wrong size", 3, channelProgrammeList.size());
+    assertEquals("Channel Programme List is of the wrong size", TestUtil.CHANNEL_PROGRAMMES.length, channelProgrammeList.size());
     assertEquals("Alien", channelProgrammeList.get(0).getProgramme().getProgTitle());
     assertEquals("Aliens", channelProgrammeList.get(1).getProgramme().getProgTitle());
     assertEquals("Blade Runner", channelProgrammeList.get(2).getProgramme().getProgTitle());    
@@ -97,6 +98,37 @@ public class ChannelProgrammeServiceTest {
     
     assertEquals("Channel Programme List is of the wrong size", 0, channelProgrammeList.size());
     verify(channelProgrammeRepositoryMock, times(1)).findScheduledPerformerProgrammes(1L, TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);
+  }
+  
+  @Test
+  public void testFindScheduledChannelProgrammesForPeriodWhenChannelIsFound() {
+    ChannelProgramme[] channelProgrammeForBBC2 = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[3]};
+    
+    when(channelProgrammeRepositoryMock.findScheduledChannelProgrammesForPeriod(2L, TestUtil.NOW,
+        TestUtil.TWO_HOURS)).thenReturn(Arrays.asList(channelProgrammeForBBC2));
+    
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledChannelProgrammesForPeriod(2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT),
+        new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT));
+    
+    assertEquals("Channel Programme List is of the wrong size", 1, channelProgrammeList.size());
+    assertEquals("Alien 3", channelProgrammeList.get(0).getProgramme().getProgTitle());
+    verify(channelProgrammeRepositoryMock, times(1)).findScheduledChannelProgrammesForPeriod(2L, TestUtil.NOW, TestUtil.TWO_HOURS);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);
+  }
+  
+  @Test
+  public void testFindScheduledChannelProgrammesForPeriodWhenNoScheduledProgrammes() {
+    ChannelProgramme[] channelProgrammeForBBC2 = new ChannelProgramme[]{};
+    
+    when(channelProgrammeRepositoryMock.findScheduledChannelProgrammesForPeriod(2L, TestUtil.NOW,
+        TestUtil.TWO_HOURS)).thenReturn(Arrays.asList(channelProgrammeForBBC2));
+    
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledChannelProgrammesForPeriod(2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT),
+        new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT));
+    
+    assertEquals("Channel Programme List is of the wrong size", 0, channelProgrammeList.size());    
+    verify(channelProgrammeRepositoryMock, times(1)).findScheduledChannelProgrammesForPeriod(2L, TestUtil.NOW, TestUtil.TWO_HOURS);
     verifyNoMoreInteractions(channelProgrammeRepositoryMock);
   }
 

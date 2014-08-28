@@ -21,11 +21,16 @@ public class TestUtil {
   
   public static final Date TODAY = new LocalDate().toDateTimeAtStartOfDay().toDate();
   public static final Date TWO_WEEKS = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
+  
+  public static final Date NOW = new LocalTime().toDateTimeToday().withSecondOfMinute(0).withMillisOfSecond(0).toDate();
+  public static final Date TWO_HOURS = new LocalTime().plusHours(2).toDateTimeToday().withSecondOfMinute(0).withMillisOfSecond(0).toDate();
 
   public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
       MediaType.APPLICATION_JSON.getSubtype(),                        
       Charset.forName("utf8")                     
       );
+  
+  public static final String DATE_TIME_FORMAT = "yyyyMMddHHmm";
   
   public static final ChannelProgramme[] CHANNEL_PROGRAMMES = createChannelProgrammeTestData();
 
@@ -37,6 +42,10 @@ public class TestUtil {
     Director jamesCameron = new Director();
     jamesCameron.setDirectorId(2L);
     jamesCameron.setDirectorName("James Cameron");
+    
+    Director jeanPierreJeunet = new Director();
+    jeanPierreJeunet.setDirectorId(3L);
+    jeanPierreJeunet.setDirectorName("Jean-Pierre Jeunet");
 
     Genre genre = new Genre();
     genre.setGenreId(1L);
@@ -45,6 +54,11 @@ public class TestUtil {
     Channel bbc1 = new Channel();
     bbc1.setChannelId(1L);
     bbc1.setChannelName("BBC 1");
+    
+    Channel bbc2 = new Channel();
+    bbc2.setChannelId(2L);
+    bbc2.setChannelName("BBC 2");
+    
     Programme prog1 = new Programme();
     prog1.setProgrammeId(1L);
     prog1.setBlackAndWhite(false);
@@ -83,6 +97,19 @@ public class TestUtil {
     prog3.setProgTitle("Blade Runner");
     prog3.setWideScreen(false);
     prog3.setYear(new LocalDate(1982,1,1).toDate());
+    
+    Programme prog4 = new Programme();
+    prog4.setProgrammeId(2L);
+    prog4.setBlackAndWhite(false);
+    prog4.setCertificate("18");
+    prog4.setDescription("Fast paced action thriller");
+    prog4.setDirector(jeanPierreJeunet);
+    prog4.setFilm(true);
+    prog4.setGenre(genre);
+    prog4.setPerformers(null);
+    prog4.setProgTitle("Alien 3");
+    prog4.setWideScreen(false);
+    prog4.setYear(new LocalDate(1992,1,1).toDate());
 
     ChannelProgramme chanprog1 = new ChannelProgramme();
     chanprog1.setChannelProgrammeId(1L);
@@ -134,8 +161,25 @@ public class TestUtil {
     chanprog3.setStartTime(new LocalTime(22,30,0).toDateTimeToday().toDate());
     chanprog3.setSubtitles(false);
     chanprog3.setProgramme(prog3);
+    
+    ChannelProgramme chanprog4 = new ChannelProgramme();
+    chanprog4.setChannelProgrammeId(4L);
+    chanprog4.setChannel(bbc2);
+    chanprog4.setChoice(false);
+    chanprog4.setDeafSigned(false);
+    chanprog4.setDuration(60);
+    chanprog4.setEndTime(new LocalTime(23,30,0).toDateTimeToday().toDate());
+    chanprog4.setEpisode(null);
+    chanprog4.setNewSeries(false);
+    chanprog4.setPremiere(false);
+    chanprog4.setProgDate(new DateTime().minusDays(1).toDate());
+    chanprog4.setRepeat(false);
+    chanprog4.setStarRating(5);
+    chanprog4.setStartTime(new LocalTime(22,30,0).toDateTimeToday().toDate());
+    chanprog4.setSubtitles(false);
+    chanprog4.setProgramme(prog4);
 
-    return new ChannelProgramme[]{chanprog2, chanprog1, chanprog3};
+    return new ChannelProgramme[]{chanprog2, chanprog1, chanprog3, chanprog4};
   }
 
 }

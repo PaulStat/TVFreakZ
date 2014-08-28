@@ -12,12 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.repository.ChannelProgrammeRepository;
+import com.tvfreakz.util.Utils;
 
 @Service("channelProgrammeService")
 public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
-  
+
   private ChannelProgrammeRepository channelProgrammeRepository;
-  
+
   @Autowired
   public ChannelProgrammeServiceImpl(ChannelProgrammeRepository channelProgrammeRepository) {
     this.channelProgrammeRepository = channelProgrammeRepository;
@@ -38,7 +39,15 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
   @Transactional(readOnly = true)
   @Override
   public List<ChannelProgramme> findScheduledPerformerProgrammes(Long performerID, Date fromDate, Date toDate) {
-	return channelProgrammeRepository.findScheduledPerformerProgrammes(performerID, fromDate, toDate);
+    return channelProgrammeRepository.findScheduledPerformerProgrammes(performerID, fromDate, toDate);
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public List<ChannelProgramme> findScheduledChannelProgrammesForPeriod(Long channelID, String startDateTime, String endDateTime) {    
+    Date from = Utils.DATE_TIME_FORMATTER.parseDateTime(startDateTime).toDate();
+    Date to   = Utils.DATE_TIME_FORMATTER.parseDateTime(endDateTime).toDate();
+    return channelProgrammeRepository.findScheduledChannelProgrammesForPeriod(channelID, from, to);
   }
 
 }

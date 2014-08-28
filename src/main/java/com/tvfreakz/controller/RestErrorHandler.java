@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.tvfreakz.exception.ChannelNotFoundException;
 import com.tvfreakz.exception.DirectorNotFoundException;
+import com.tvfreakz.exception.InvalidDateFormatException;
 import com.tvfreakz.exception.PerformerNotFoundException;
 
 @ControllerAdvice
@@ -28,6 +30,18 @@ public class RestErrorHandler {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public void handlePerformerNotFoundException(PerformerNotFoundException ex) {
     LOGGER.debug("handling 404 error on a performer entry");
+  }
+  
+  @ExceptionHandler(ChannelNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public void handleChannelNotFoundException(ChannelNotFoundException ex) {
+    LOGGER.debug("handling 404 error on a channel entry");
+  }
+  
+  @ExceptionHandler(InvalidDateFormatException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public void handleInvalidDateFormatException(InvalidDateFormatException ex) {
+	  LOGGER.debug("handling bad request on date string");  
   }
 
 }
