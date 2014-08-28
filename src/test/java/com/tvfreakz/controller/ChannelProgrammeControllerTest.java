@@ -30,10 +30,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.tvfreakz.exception.ChannelNotFoundException;
 import com.tvfreakz.exception.DirectorNotFoundException;
 import com.tvfreakz.exception.PerformerNotFoundException;
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.service.ChannelProgrammeService;
+import com.tvfreakz.service.ChannelService;
 import com.tvfreakz.service.DirectorService;
 import com.tvfreakz.service.PerformerService;
 import com.tvfreakz.util.TestUtil;
@@ -50,9 +52,12 @@ public class ChannelProgrammeControllerTest {
 
   @Autowired
   private DirectorService directorServiceMock;
-  
+
   @Autowired
   private PerformerService performerServiceMock;
+  
+  @Autowired
+  private ChannelService channelServiceMock;
 
   @Autowired
   private WebApplicationContext webApplicationContext; 
@@ -63,6 +68,7 @@ public class ChannelProgrammeControllerTest {
     Mockito.reset(channelProgrammeServiceMock);
     Mockito.reset(directorServiceMock);
     Mockito.reset(performerServiceMock);
+    Mockito.reset(channelServiceMock);
 
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();    
   }
@@ -94,7 +100,7 @@ public class ChannelProgrammeControllerTest {
     when(channelProgrammeServiceMock.findScheduledDirectorProgrammes(1L, TestUtil.TODAY,
         TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForDirector));
 
-    mockMvc.perform(get("/api/directorshowings/{id}", 1L))
+    mockMvc.perform(get("/api/directorshowings/{directorId}", 1L))
     .andDo(print())
     .andExpect(status().isOk())
     .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -112,7 +118,7 @@ public class ChannelProgrammeControllerTest {
 
     when(directorServiceMock.findByDirectorId(3L)).thenThrow(new DirectorNotFoundException());
 
-    mockMvc.perform(get("/api/directorshowings/{id}", 3L))
+    mockMvc.perform(get("/api/directorshowings/{directorId}", 3L))
     .andExpect(status().isNotFound());
 
     verify(directorServiceMock, times(1)).findByDirectorId(3L);
@@ -126,7 +132,7 @@ public class ChannelProgrammeControllerTest {
     when(channelProgrammeServiceMock.findScheduledDirectorProgrammes(1L, TestUtil.TODAY,
         TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForDirector));
 
-    mockMvc.perform(get("/api/directorshowings/{id}", 1L))
+    mockMvc.perform(get("/api/directorshowings/{directorId}", 1L))
     .andDo(print())
     .andExpect(status().isOk())
     .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -140,28 +146,28 @@ public class ChannelProgrammeControllerTest {
   @Test
   public void testFindScheduledPerformerProgrammesWhenPerformerIsFound() throws Exception {	  
     ChannelProgramme[] channelProgrammeForPerformer = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[0], TestUtil.CHANNEL_PROGRAMMES[1]};
-	  
-	when(channelProgrammeServiceMock.findScheduledPerformerProgrammes(1L, TestUtil.TODAY,
+
+    when(channelProgrammeServiceMock.findScheduledPerformerProgrammes(1L, TestUtil.TODAY,
         TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForPerformer));
-	  
-    mockMvc.perform(get("/api/performershowings/{id}", 1L))
+
+    mockMvc.perform(get("/api/performershowings/{performerId}", 1L))
     .andDo(print())
     .andExpect(status().isOk())
     .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
     .andExpect(jsonPath("$", hasSize(2)))
     .andExpect(jsonPath("$[0].programme.progTitle", is("Alien")))    
     .andExpect(jsonPath("$[1].programme.progTitle", is("Aliens")));
-	    
+
     verify(channelProgrammeServiceMock, times(1)).findScheduledPerformerProgrammes(1L, TestUtil.TODAY,
-    	    TestUtil.TWO_WEEKS);
+        TestUtil.TWO_WEEKS);
     verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
 
   @Test
   public void testFindScheduledPerformerProgrammesWhenPerformerIsNotFound() throws Exception {
     when(performerServiceMock.findByPerformerId(3L)).thenThrow(new PerformerNotFoundException());
-    
-    mockMvc.perform(get("/api/performershowings/{id}", 3L))
+
+    mockMvc.perform(get("/api/performershowings/{performerId}", 3L))
     .andExpect(status().isNotFound());
 
     verify(performerServiceMock, times(1)).findByPerformerId(3L);
@@ -171,53 +177,75 @@ public class ChannelProgrammeControllerTest {
   @Test
   public void testFindScheduledPerformerProgrammesWhenNoScheduledProgrammes() throws Exception {
     ChannelProgramme[] channelProgrammeForPerformer = new ChannelProgramme[]{};
-    
+
     when(channelProgrammeServiceMock.findScheduledPerformerProgrammes(1L, TestUtil.TODAY,
         TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(channelProgrammeForPerformer));
-      
-    mockMvc.perform(get("/api/performershowings/{id}", 1L))
+
+    mockMvc.perform(get("/api/performershowings/{performerId}", 1L))
     .andDo(print())
     .andExpect(status().isOk())
     .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
     .andExpect(jsonPath("$", hasSize(0)));
-        
+
     verify(channelProgrammeServiceMock, times(1)).findScheduledPerformerProgrammes(1L, TestUtil.TODAY,
-            TestUtil.TWO_WEEKS);
+        TestUtil.TWO_WEEKS);
     verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
-  
+
   @Test
   public void testFindScheduledChannelProgrammesForPeriodWhenChannelIsFound() throws Exception {
     ChannelProgramme[] channelProgrammeForBBC2 = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[3]};
-    
+
     when(channelProgrammeServiceMock.findScheduledChannelProgrammesForPeriod(2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT),
         new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT))).thenReturn(Arrays.asList(channelProgrammeForBBC2));
-    
-    mockMvc.perform(get("/api/channelshowings/{id}/{from}/{to}", 2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT), new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT)))
+
+    mockMvc.perform(get("/api/channelshowings/{channelId}/{from}/{to}", 2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT), new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT)))
     .andDo(print())
     .andExpect(status().isOk())
     .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
     .andExpect(jsonPath("$", hasSize(1)))
     .andExpect(jsonPath("$[0].programme.progTitle", is("Alien 3")));
-    
+
     verify(channelProgrammeServiceMock, times(1)).findScheduledChannelProgrammesForPeriod(2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT),
         new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT));
     verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
-  
+
   @Test
-  public void testFindScheduledChannelProgrammesForPeriodWhenRequestPathHasInvalidDateTimeFormat() throws Exception {
-    //TODO
+  public void testFindScheduledChannelProgrammesForPeriodWhenRequestPathHasInvalidDateTimeFormat() throws Exception {       
+    mockMvc.perform(get("/api/channelshowings/{channelId}/{from}/{to}", 2L, "sss", "sss"))
+    .andDo(print())
+    .andExpect(status().isBadRequest());
   }
-  
+
   @Test
   public void testFindScheduledChannelProgrammesForPeriodWhenChannelIsNotFound() throws Exception {
-    //TODO
+    when(channelServiceMock.findByChannelId(3L)).thenThrow(new ChannelNotFoundException());
+    
+    mockMvc.perform(get("/api/channelshowings/{channelId}/{from}/{to}", 3L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT), new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT)))
+    .andDo(print())
+    .andExpect(status().isNotFound());
+
+    verify(channelServiceMock, times(1)).findByChannelId(3L);
+    verifyNoMoreInteractions(channelServiceMock);
   }
-  
+
   @Test
   public void testFindScheduledChannelProgrammesForPeriodWhenNoScheduledProgrammes() throws Exception {
-    //TODO
+    ChannelProgramme[] channelProgrammeForBBC2 = new ChannelProgramme[]{};
+
+    when(channelProgrammeServiceMock.findScheduledChannelProgrammesForPeriod(2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT),
+        new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT))).thenReturn(Arrays.asList(channelProgrammeForBBC2));
+
+    mockMvc.perform(get("/api/channelshowings/{channelId}/{from}/{to}", 2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT), new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT)))
+    .andDo(print())
+    .andExpect(status().isOk())
+    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    .andExpect(jsonPath("$", hasSize(0)));    
+
+    verify(channelProgrammeServiceMock, times(1)).findScheduledChannelProgrammesForPeriod(2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT),
+        new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT));
+    verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
 
 }

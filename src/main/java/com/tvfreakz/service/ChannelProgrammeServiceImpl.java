@@ -6,22 +6,18 @@ package com.tvfreakz.service;
 import java.util.Date;
 import java.util.List;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.repository.ChannelProgrammeRepository;
+import com.tvfreakz.util.Utils;
 
 @Service("channelProgrammeService")
 public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
 
   private ChannelProgrammeRepository channelProgrammeRepository;
-
-  private static final String DATE_TIME_FORMAT = "yyyyMMddHHmm";
-  private static final DateTimeFormatter formatter = DateTimeFormat.forPattern(DATE_TIME_FORMAT);
 
   @Autowired
   public ChannelProgrammeServiceImpl(ChannelProgrammeRepository channelProgrammeRepository) {
@@ -48,9 +44,9 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<ChannelProgramme> findScheduledChannelProgrammesForPeriod(Long channelID, String startDateTime, String endDateTime) {
-    Date from = formatter.parseDateTime(startDateTime).toDate();
-    Date to   = formatter.parseDateTime(endDateTime).toDate();
+  public List<ChannelProgramme> findScheduledChannelProgrammesForPeriod(Long channelID, String startDateTime, String endDateTime) {    
+    Date from = Utils.DATE_TIME_FORMATTER.parseDateTime(startDateTime).toDate();
+    Date to   = Utils.DATE_TIME_FORMATTER.parseDateTime(endDateTime).toDate();
     return channelProgrammeRepository.findScheduledChannelProgrammesForPeriod(channelID, from, to);
   }
 

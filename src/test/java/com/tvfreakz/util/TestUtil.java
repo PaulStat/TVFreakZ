@@ -22,8 +22,8 @@ public class TestUtil {
   public static final Date TODAY = new LocalDate().toDateTimeAtStartOfDay().toDate();
   public static final Date TWO_WEEKS = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
   
-  public static final Date NOW = new LocalTime().toDateTimeToday().toDate();
-  public static final Date TWO_HOURS = new LocalTime().plusHours(2).toDateTimeToday().toDate();
+  public static final Date NOW = new LocalTime().toDateTimeToday().withSecondOfMinute(0).withMillisOfSecond(0).toDate();
+  public static final Date TWO_HOURS = new LocalTime().plusHours(2).toDateTimeToday().withSecondOfMinute(0).withMillisOfSecond(0).toDate();
 
   public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
       MediaType.APPLICATION_JSON.getSubtype(),                        
