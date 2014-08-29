@@ -36,14 +36,30 @@ public class ChannelProgrammeServiceTest {
   
   @Test
   public void testFindScheduledProgrammes() {    
-    when(channelProgrammeRepositoryMock.findByProgDateBetweenOrderByProgDateAscStartTimeAsc(TestUtil.TODAY, TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(TestUtil.CHANNEL_PROGRAMMES));
+    when(channelProgrammeRepositoryMock.findAllOrderByProgDateAscStartTimeAsc()).thenReturn(Arrays.asList(TestUtil.CHANNEL_PROGRAMMES));
     
-    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledProgrammes(TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledProgrammes();
     
     assertEquals("Channel Programme List is of the wrong size", TestUtil.CHANNEL_PROGRAMMES.length, channelProgrammeList.size());
     assertEquals("Alien", channelProgrammeList.get(0).getProgramme().getProgTitle());
     assertEquals("Aliens", channelProgrammeList.get(1).getProgramme().getProgTitle());
     assertEquals("Blade Runner", channelProgrammeList.get(2).getProgramme().getProgTitle());    
+  }
+  
+  @Test
+  public void testFindScheduledProgrammesForPeriod() throws Exception {
+    String from = new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT);
+    String to = new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT);
+    
+    when(channelProgrammeRepositoryMock.findScheduledProgrammesForPeriod(TestUtil.NOW, TestUtil.TWO_HOURS))
+    .thenReturn(Arrays.asList(TestUtil.CHANNEL_PROGRAMMES));
+    
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledProgrammesForPeriod(from, to);
+    
+    assertEquals("Channel Programme List is of the wrong size", TestUtil.CHANNEL_PROGRAMMES.length, channelProgrammeList.size());
+    assertEquals("Alien", channelProgrammeList.get(0).getProgramme().getProgTitle());
+    assertEquals("Aliens", channelProgrammeList.get(1).getProgramme().getProgTitle());
+    assertEquals("Blade Runner", channelProgrammeList.get(2).getProgramme().getProgTitle());
   }
   
   @Test

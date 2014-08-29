@@ -33,8 +33,8 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<ChannelProgramme> findScheduledProgrammes(Date fromDate, Date toDate) {    
-    return channelProgrammeRepository.findByProgDateBetweenOrderByProgDateAscStartTimeAsc(fromDate, toDate);
+  public List<ChannelProgramme> findScheduledProgrammes() {
+    return channelProgrammeRepository.findAllOrderByProgDateAscStartTimeAsc();
   }
 
   @Transactional(readOnly = true)
@@ -65,6 +65,13 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
     //First check to see if the Channel Programme exists
     findScheduledProgramme(channelProgrammeId);
     return channelProgrammeRepository.findScheduledProgrammeShowings(channelProgrammeId);
+  }
+
+  @Override
+  public List<ChannelProgramme> findScheduledProgrammesForPeriod(String startDateTime, String endDateTime) {
+    Date from = Utils.DATE_TIME_FORMATTER.parseDateTime(startDateTime).toDate();
+    Date to   = Utils.DATE_TIME_FORMATTER.parseDateTime(endDateTime).toDate();
+    return channelProgrammeRepository.findScheduledProgrammesForPeriod(from, to);
   }
 
 }

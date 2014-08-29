@@ -13,7 +13,7 @@ public interface ChannelProgrammeService {
 
   List<ChannelProgramme> findScheduledDirectorProgrammes(Long directorID, Date fromDate, Date toDate);
 
-  List<ChannelProgramme> findScheduledProgrammes(Date fromDate, Date toDate);
+  List<ChannelProgramme> findScheduledProgrammes();
 
   List<ChannelProgramme> findScheduledPerformerProgrammes(Long performerID, Date fromDate, Date toDate);
 
@@ -22,5 +22,7 @@ public interface ChannelProgrammeService {
   ChannelProgramme findScheduledProgramme(Long channelProgrammeId) throws ChannelProgrammeNotFoundException;
 
   List<ChannelProgramme> findScheduledProgrammeShowings(Long channelProgrammeId) throws ChannelProgrammeNotFoundException;
+
+  List<ChannelProgramme> findScheduledProgrammesForPeriod(String startDateTime, String endDateTime);
 
 }

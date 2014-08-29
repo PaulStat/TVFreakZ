@@ -16,7 +16,7 @@ import com.tvfreakz.model.entity.ChannelProgramme;
 @Repository("channelProgrammeRepository")
 public interface ChannelProgrammeRepository extends JpaRepository<ChannelProgramme, Long> {
 
-  List<ChannelProgramme> findByProgDateBetweenOrderByProgDateAscStartTimeAsc(Date today, Date twoWeeks);
+  List<ChannelProgramme> findAllOrderByProgDateAscStartTimeAsc();
 
   @Query("Select new com.tvfreakz.model.ChannelProgramme() from ChannelProgramme cp, Programme p"
       + " where (cp.programme.programmeId = p.programmeId) AND (programme.director.directorId = :directorID) AND (cp.progDate BETWEEN :fromDate AND :toDate)"
@@ -38,5 +38,8 @@ public interface ChannelProgrammeRepository extends JpaRepository<ChannelProgram
 
   @Query("to do")
   List<ChannelProgramme> findScheduledProgrammeShowings(Long channelProgrammeId);
+
+  @Query("to do")
+  List<ChannelProgramme> findScheduledProgrammesForPeriod(Date from, Date to);
   
 }
