@@ -62,9 +62,18 @@ public class ChannelProgrammeController {
   @ResponseBody
   @RequestMapping(value = "/api/all", method = RequestMethod.GET)
   public List<ChannelProgrammeDTO> findScheduledProgrammes() {
-    Date today = new LocalDate().toDateTimeAtStartOfDay().toDate();
-    Date twoWeeks = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
-    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledProgrammes(today, twoWeeks);
+    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledProgrammes();
+    return createDTOList(chanprogs);
+  }
+  
+  @ResponseBody
+  @RequestMapping(value = "/api/all/{from}/{to}", method = RequestMethod.GET)
+  public List<ChannelProgrammeDTO> findScheduledProgrammesForPeriod(@PathVariable("from") String from, @PathVariable("to") String to) throws InvalidDateFormatException {
+    //First check if the date request fields are valid
+    if(!(DateTimeParameterValidator.validateDateTimeString(from) || DateTimeParameterValidator.validateDateTimeString(to))) {
+      throw new InvalidDateFormatException();
+    }
+    List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledProgrammesForPeriod(from, to);
     return createDTOList(chanprogs);
   }
 

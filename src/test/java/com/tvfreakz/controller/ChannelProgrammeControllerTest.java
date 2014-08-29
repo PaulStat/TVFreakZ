@@ -76,9 +76,7 @@ public class ChannelProgrammeControllerTest {
 
   @Test
   public void testFindScheduledProgrammes() throws Exception {    
-
-    when(channelProgrammeServiceMock.findScheduledProgrammes(TestUtil.TODAY,
-        TestUtil.TWO_WEEKS)).thenReturn(Arrays.asList(TestUtil.CHANNEL_PROGRAMMES));
+    when(channelProgrammeServiceMock.findScheduledProgrammes()).thenReturn(Arrays.asList(TestUtil.CHANNEL_PROGRAMMES));
 
     mockMvc.perform(get("/api/all"))
     .andDo(print())
@@ -89,8 +87,35 @@ public class ChannelProgrammeControllerTest {
     .andExpect(jsonPath("$[1].programme.progTitle", is("Aliens")))
     .andExpect(jsonPath("$[2].programme.progTitle", is("Blade Runner")));
 
-    verify(channelProgrammeServiceMock, times(1)).findScheduledProgrammes(TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    verify(channelProgrammeServiceMock, times(1)).findScheduledProgrammes();
     verifyNoMoreInteractions(channelProgrammeServiceMock);
+  }
+  
+  @Test
+  public void testFindScheduledProgrammesForPeriod() throws Exception {
+    String from = new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT);
+    String to = new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT);
+    
+    when(channelProgrammeServiceMock.findScheduledProgrammesForPeriod(from, to)).thenReturn(Arrays.asList(TestUtil.CHANNEL_PROGRAMMES));
+    
+    mockMvc.perform(get("/api/all/{from}/{to}", from, to))
+    .andDo(print())
+    .andExpect(status().isOk())
+    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    .andExpect(jsonPath("$", hasSize(TestUtil.CHANNEL_PROGRAMMES.length)))
+    .andExpect(jsonPath("$[0].programme.progTitle", is("Alien")))
+    .andExpect(jsonPath("$[1].programme.progTitle", is("Aliens")))
+    .andExpect(jsonPath("$[2].programme.progTitle", is("Blade Runner")));
+    
+    verify(channelProgrammeServiceMock, times(1)).findScheduledProgrammesForPeriod(from, to);
+    verifyNoMoreInteractions(channelProgrammeServiceMock);
+  }
+  
+  @Test
+  public void testFindScheduledProgrammesForPeriodWhenRequestPathHasInvalidDateFormat() throws Exception {
+    mockMvc.perform(get("/api/all/{from}/{to}", "sss", "sss"))
+    .andDo(print())
+    .andExpect(status().isBadRequest());
   }
   
   @Test
@@ -269,20 +294,20 @@ public class ChannelProgrammeControllerTest {
 
   @Test
   public void testFindScheduledChannelProgrammesForPeriodWhenChannelIsFound() throws Exception {
+    String from = new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT);
+    String to = new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT);
     ChannelProgramme[] channelProgrammeForBBC2 = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[3]};
 
-    when(channelProgrammeServiceMock.findScheduledChannelProgrammesForPeriod(2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT),
-        new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT))).thenReturn(Arrays.asList(channelProgrammeForBBC2));
+    when(channelProgrammeServiceMock.findScheduledChannelProgrammesForPeriod(2L, from, to)).thenReturn(Arrays.asList(channelProgrammeForBBC2));
 
-    mockMvc.perform(get("/api/channelshowings/{channelId}/{from}/{to}", 2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT), new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT)))
+    mockMvc.perform(get("/api/channelshowings/{channelId}/{from}/{to}", 2L, from, to))
     .andDo(print())
     .andExpect(status().isOk())
     .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
     .andExpect(jsonPath("$", hasSize(1)))
     .andExpect(jsonPath("$[0].programme.progTitle", is("Alien 3")));
 
-    verify(channelProgrammeServiceMock, times(1)).findScheduledChannelProgrammesForPeriod(2L, new DateTime(TestUtil.NOW).toString(TestUtil.DATE_TIME_FORMAT),
-        new DateTime(TestUtil.TWO_HOURS).toString(TestUtil.DATE_TIME_FORMAT));
+    verify(channelProgrammeServiceMock, times(1)).findScheduledChannelProgrammesForPeriod(2L, from, to);
     verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
 
