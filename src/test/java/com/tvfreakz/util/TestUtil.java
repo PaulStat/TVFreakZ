@@ -59,6 +59,10 @@ public class TestUtil {
     bbc2.setChannelId(2L);
     bbc2.setChannelName("BBC 2");
     
+    Channel bbc3 = new Channel();
+    bbc3.setChannelId(3L);
+    bbc3.setChannelName("BBC 3");
+    
     Programme prog1 = new Programme();
     prog1.setProgrammeId(1L);
     prog1.setBlackAndWhite(false);
@@ -178,8 +182,42 @@ public class TestUtil {
     chanprog4.setStartTime(new LocalTime(22,30,0).toDateTimeToday().toDate());
     chanprog4.setSubtitles(false);
     chanprog4.setProgramme(prog4);
+    
+    ChannelProgramme chanprog5 = new ChannelProgramme();
+    chanprog5.setChannelProgrammeId(5L);
+    chanprog5.setChannel(bbc1);
+    chanprog5.setChoice(false);
+    chanprog5.setDeafSigned(false);
+    chanprog5.setDuration(60);
+    chanprog5.setEndTime(new LocalTime(23,30,0).toDateTimeToday().toDate());
+    chanprog5.setEpisode(null);
+    chanprog5.setNewSeries(false);
+    chanprog5.setPremiere(false);
+    chanprog5.setProgDate(new DateTime().plusDays(2).toDate());
+    chanprog5.setRepeat(false);
+    chanprog5.setStarRating(5);
+    chanprog5.setStartTime(new LocalTime(22,30,0).toDateTimeToday().toDate());
+    chanprog5.setSubtitles(false);
+    chanprog5.setProgramme(prog4);
+    
+    ChannelProgramme chanprog6 = new ChannelProgramme();
+    chanprog6.setChannelProgrammeId(6L);
+    chanprog6.setChannel(bbc3);
+    chanprog6.setChoice(false);
+    chanprog6.setDeafSigned(false);
+    chanprog6.setDuration(60);
+    chanprog6.setEndTime(new LocalTime(23,30,0).toDateTimeToday().toDate());
+    chanprog6.setEpisode(null);
+    chanprog6.setNewSeries(false);
+    chanprog6.setPremiere(false);
+    chanprog6.setProgDate(new DateTime().plusDays(3).toDate());
+    chanprog6.setRepeat(false);
+    chanprog6.setStarRating(5);
+    chanprog6.setStartTime(new LocalTime(22,30,0).toDateTimeToday().toDate());
+    chanprog6.setSubtitles(false);
+    chanprog6.setProgramme(prog4);
 
-    return new ChannelProgramme[]{chanprog2, chanprog1, chanprog3, chanprog4};
+    return new ChannelProgramme[]{chanprog2, chanprog1, chanprog3, chanprog4, chanprog5, chanprog6};
   }
 
 }

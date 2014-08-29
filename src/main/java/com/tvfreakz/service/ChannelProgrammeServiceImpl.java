@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tvfreakz.exception.ChannelProgrammeNotFoundException;
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.repository.ChannelProgrammeRepository;
 import com.tvfreakz.util.Utils;
@@ -48,6 +49,22 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
     Date from = Utils.DATE_TIME_FORMATTER.parseDateTime(startDateTime).toDate();
     Date to   = Utils.DATE_TIME_FORMATTER.parseDateTime(endDateTime).toDate();
     return channelProgrammeRepository.findScheduledChannelProgrammesForPeriod(channelID, from, to);
+  }
+
+  @Override
+  public ChannelProgramme findScheduledProgramme(Long channelProgrammeId) throws ChannelProgrammeNotFoundException {
+    ChannelProgramme chanProg = channelProgrammeRepository.findByChannelProgrammeId(channelProgrammeId);
+    if(chanProg == null) {
+      throw new ChannelProgrammeNotFoundException("ChannelProgramme with an id of " +channelProgrammeId +" was not found");
+    }
+    return chanProg;
+  }
+
+  @Override
+  public List<ChannelProgramme> findScheduledProgrammeShowings(Long channelProgrammeId) throws ChannelProgrammeNotFoundException {
+    //First check to see if the Channel Programme exists
+    findScheduledProgramme(channelProgrammeId);
+    return channelProgrammeRepository.findScheduledProgrammeShowings(channelProgrammeId);
   }
 
 }

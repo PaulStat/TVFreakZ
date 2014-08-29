@@ -31,6 +31,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.tvfreakz.exception.ChannelNotFoundException;
+import com.tvfreakz.exception.ChannelProgrammeNotFoundException;
 import com.tvfreakz.exception.DirectorNotFoundException;
 import com.tvfreakz.exception.PerformerNotFoundException;
 import com.tvfreakz.model.entity.ChannelProgramme;
@@ -89,6 +90,80 @@ public class ChannelProgrammeControllerTest {
     .andExpect(jsonPath("$[2].programme.progTitle", is("Blade Runner")));
 
     verify(channelProgrammeServiceMock, times(1)).findScheduledProgrammes(TestUtil.TODAY, TestUtil.TWO_WEEKS);
+    verifyNoMoreInteractions(channelProgrammeServiceMock);
+  }
+  
+  @Test
+  public void testFindScheduledProgrammeWhenProgrammeIsFound() throws Exception {
+    ChannelProgramme chanProg = TestUtil.CHANNEL_PROGRAMMES[0];
+    
+    when(channelProgrammeServiceMock.findScheduledProgramme(2L)).thenReturn(chanProg);
+    
+    mockMvc.perform(get("/api/programme/{channelProgrammeId}", 2L))
+    .andDo(print())
+    .andExpect(status().isOk())
+    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    .andExpect(jsonPath("$programme.progTitle", is("Alien")));
+    
+    verify(channelProgrammeServiceMock, times(1)).findScheduledProgramme(2L);
+    verifyNoMoreInteractions(channelProgrammeServiceMock);
+  }
+  
+  @Test
+  public void testFindScheduledProgrammeWhenProgrammeIsNotFound() throws Exception {
+    when(channelProgrammeServiceMock.findScheduledProgramme(5L)).thenThrow(new ChannelProgrammeNotFoundException());
+    
+    mockMvc.perform(get("/api/programme/{channelProgrammeId}", 5L))
+    .andDo(print())
+    .andExpect(status().isNotFound());
+    
+    verify(channelProgrammeServiceMock, times(1)).findScheduledProgramme(5L);
+    verifyNoMoreInteractions(channelProgrammeServiceMock);
+  }
+  
+  @Test
+  public void testFindScheduledProgrammeShowingsWhenProgrammeIsFound() throws Exception {
+    ChannelProgramme[] channelProgrammeShowings = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[4], TestUtil.CHANNEL_PROGRAMMES[5]};
+    
+    when(channelProgrammeServiceMock.findScheduledProgrammeShowings(4L)).thenReturn(Arrays.asList(channelProgrammeShowings));
+    
+    mockMvc.perform(get("/api/programmeshowings/{channelProgrammeId}", 4L))
+    .andDo(print())
+    .andExpect(status().isOk())
+    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    .andExpect(jsonPath("$", hasSize(2)))
+    .andExpect(jsonPath("$[0].programme.progTitle", is("Alien 3")))
+    .andExpect(jsonPath("$[1].programme.progTitle", is("Alien 3")));
+    
+    verify(channelProgrammeServiceMock, times(1)).findScheduledProgrammeShowings(4L);
+    verifyNoMoreInteractions(channelProgrammeServiceMock);
+  }
+  
+  @Test
+  public void testFindScheduledProgrammeShowingsWhenProgrammeIsNotFound() throws Exception {
+    when(channelProgrammeServiceMock.findScheduledProgrammeShowings(7L)).thenThrow(new ChannelProgrammeNotFoundException());
+    
+    mockMvc.perform(get("/api/programmeshowings/{channelProgrammeId}", 7L))
+    .andDo(print())
+    .andExpect(status().isNotFound());
+    
+    verify(channelProgrammeServiceMock, times(1)).findScheduledProgrammeShowings(7L);
+    verifyNoMoreInteractions(channelProgrammeServiceMock);
+  }
+  
+  @Test
+  public void testFindScheduledProgrammeShowingsWhenNoMoreScheduledProgrammes() throws Exception {
+    ChannelProgramme[] channelProgrammeShowings = new ChannelProgramme[]{};
+    
+    when(channelProgrammeServiceMock.findScheduledProgrammeShowings(4L)).thenReturn(Arrays.asList(channelProgrammeShowings));
+    
+    mockMvc.perform(get("/api/programmeshowings/{channelProgrammeId}", 4L))
+    .andDo(print())
+    .andExpect(status().isOk())
+    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    .andExpect(jsonPath("$", hasSize(0)));
+    
+    verify(channelProgrammeServiceMock, times(1)).findScheduledProgrammeShowings(4L);
     verifyNoMoreInteractions(channelProgrammeServiceMock);
   }
 
