@@ -17,6 +17,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.tvfreakz.exception.ChannelProgrammeNotFoundException;
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.repository.ChannelProgrammeRepository;
 import com.tvfreakz.util.TestUtil;
@@ -43,6 +44,56 @@ public class ChannelProgrammeServiceTest {
     assertEquals("Alien", channelProgrammeList.get(0).getProgramme().getProgTitle());
     assertEquals("Aliens", channelProgrammeList.get(1).getProgramme().getProgTitle());
     assertEquals("Blade Runner", channelProgrammeList.get(2).getProgramme().getProgTitle());    
+  }
+  
+  @Test
+  public void testFindScheduledProgrammeWhenProgrammeIsFound() throws Exception {   
+    ChannelProgramme chanProg = TestUtil.CHANNEL_PROGRAMMES[0];
+    
+    when(channelProgrammeRepositoryMock.findByChannelProgrammeId(2L)).thenReturn(chanProg);
+    
+    ChannelProgramme actual = channelProgrammeService.findScheduledProgramme(2L);
+    
+    assertEquals(chanProg, actual);
+    verify(channelProgrammeRepositoryMock, times(1)).findByChannelProgrammeId(2L);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);    
+  }
+  
+  @Test(expected = ChannelProgrammeNotFoundException.class)
+  public void testFindScheduledProgrammeWhenProgrammeIsNotFound() throws Exception {
+    when(channelProgrammeRepositoryMock.findByChannelProgrammeId(5L)).thenReturn(null);
+    
+    channelProgrammeService.findScheduledProgramme(5L);
+    verify(channelProgrammeRepositoryMock, times(1)).findByChannelProgrammeId(5L);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);
+  }
+  
+  @Test
+  public void testFindScheduledProgrammeShowingsWhenProgrammeIsFound() throws Exception {
+    ChannelProgramme chanProg = TestUtil.CHANNEL_PROGRAMMES[3];
+    ChannelProgramme[] channelProgrammeShowings = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[4], TestUtil.CHANNEL_PROGRAMMES[5]};
+    
+    when(channelProgrammeRepositoryMock.findByChannelProgrammeId(4L)).thenReturn(chanProg);
+    when(channelProgrammeRepositoryMock.findScheduledProgrammeShowings(4L)).thenReturn(Arrays.asList(channelProgrammeShowings));
+    
+    List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledProgrammeShowings(4L);
+    
+    assertEquals("Channel Programme List is of the wrong size", 2, channelProgrammeList.size());
+    assertEquals("Alien 3", channelProgrammeList.get(0).getProgramme().getProgTitle());
+    assertEquals("Alien 3", channelProgrammeList.get(1).getProgramme().getProgTitle());
+    verify(channelProgrammeRepositoryMock, times(1)).findByChannelProgrammeId(4L);
+    verify(channelProgrammeRepositoryMock, times(1)).findScheduledProgrammeShowings(4L);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);
+  }
+  
+  @Test(expected = ChannelProgrammeNotFoundException.class)
+  public void testFindScheduledProgrammeShowingsWhenProgrammeIsNotFound() throws Exception {
+    when(channelProgrammeRepositoryMock.findByChannelProgrammeId(4L)).thenReturn(null);
+    
+    channelProgrammeService.findScheduledProgrammeShowings(4L);
+    
+    verify(channelProgrammeRepositoryMock, times(1)).findByChannelProgrammeId(4L);
+    verifyNoMoreInteractions(channelProgrammeRepositoryMock);
   }
   
   @Test
