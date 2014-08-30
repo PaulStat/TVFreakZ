@@ -23,5 +23,9 @@
     <bean id="channelService" name="channelServiceMock" class="org.mockito.Mockito" factory-method="mock">
 	    <constructor-arg value="com.tvfreakz.service.ChannelService"/>
     </bean>
+    
+    <bean id="genreService" name="genreServiceMock" class="org.mockito.Mockito" factory-method="mock">
+    	<constructor-arg value="com.tvfreakz.service.GenreService"/>
+    </bean>
 
 </beans>

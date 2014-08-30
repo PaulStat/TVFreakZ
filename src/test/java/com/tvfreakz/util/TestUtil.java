@@ -33,6 +33,33 @@ public class TestUtil {
   public static final String DATE_TIME_FORMAT = "yyyyMMddHHmm";
   
   public static final ChannelProgramme[] CHANNEL_PROGRAMMES = createChannelProgrammeTestData();
+  
+  public static final Genre[] GENRES = createGenreTestData();
+  
+  private static Genre[] createGenreTestData() {
+    Genre arts = new Genre();
+    arts.setGenreId(1L);
+    arts.setGenreName("Arts");
+    
+    Genre childrens = new Genre();
+    childrens.setGenreId(2L);
+    childrens.setGenreName("Childrens");
+    
+    Genre comedy = new Genre();
+    comedy.setGenreId(3L);
+    comedy.setGenreName("Comedy");
+    
+    Genre currentAffairs = new Genre();
+    currentAffairs.setGenreId(4L);    
+    currentAffairs.setGenreName("Current affairs");
+    
+    Genre documentary = new Genre();
+    documentary.setGenreId(5L);
+    documentary.setGenreName("Documentary");
+    
+    Genre[] genres = new Genre[]{arts, childrens, comedy, currentAffairs, documentary};
+    return genres;
+  }
 
   private static ChannelProgramme[] createChannelProgrammeTestData() {
     Director ridleyScott = new Director();
