@@ -32,9 +32,28 @@ public class TestUtil {
   
   public static final String DATE_TIME_FORMAT = "yyyyMMddHHmm";
   
+  public static final Director[] DIRECTORS = createDirectorTestData();
+  
   public static final ChannelProgramme[] CHANNEL_PROGRAMMES = createChannelProgrammeTestData();
   
-  public static final Genre[] GENRES = createGenreTestData();
+  public static final Genre[] GENRES = createGenreTestData();  
+  
+  private static Director[] createDirectorTestData() {
+    Director ridleyScott = new Director();
+    ridleyScott.setDirectorId(1L);
+    ridleyScott.setDirectorName("Ridley Scott");
+
+    Director jamesCameron = new Director();
+    jamesCameron.setDirectorId(2L);
+    jamesCameron.setDirectorName("James Cameron");
+    
+    Director jeanPierreJeunet = new Director();
+    jeanPierreJeunet.setDirectorId(3L);
+    jeanPierreJeunet.setDirectorName("Jean-Pierre Jeunet");
+    
+    Director[] directors = new Director[]{ridleyScott, jamesCameron, jeanPierreJeunet};
+    return directors;
+  }
   
   private static Genre[] createGenreTestData() {
     Genre arts = new Genre();
@@ -62,17 +81,9 @@ public class TestUtil {
   }
 
   private static ChannelProgramme[] createChannelProgrammeTestData() {
-    Director ridleyScott = new Director();
-    ridleyScott.setDirectorId(1L);
-    ridleyScott.setDirectorName("Ridley Scott");
-
-    Director jamesCameron = new Director();
-    jamesCameron.setDirectorId(2L);
-    jamesCameron.setDirectorName("James Cameron");
-    
-    Director jeanPierreJeunet = new Director();
-    jeanPierreJeunet.setDirectorId(3L);
-    jeanPierreJeunet.setDirectorName("Jean-Pierre Jeunet");
+    Director ridleyScott = DIRECTORS[0];
+    Director jamesCameron = DIRECTORS[1];
+    Director jeanPierreJeunet = DIRECTORS[2];
 
     Genre genre = new Genre();
     genre.setGenreId(1L);
