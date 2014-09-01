@@ -34,7 +34,7 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
   @Transactional(readOnly = true)
   @Override
   public List<ChannelProgramme> findScheduledProgrammes() {
-    return channelProgrammeRepository.findAllOrderByProgDateAscStartTimeAsc();
+    return channelProgrammeRepository.findAllByOrderByProgDateAscStartTimeAsc();
   }
 
   @Transactional(readOnly = true)
