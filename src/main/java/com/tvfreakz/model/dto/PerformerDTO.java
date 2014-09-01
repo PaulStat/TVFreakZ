@@ -2,35 +2,37 @@ package com.tvfreakz.model.dto;
 
 import java.util.Set;
 
+import com.tvfreakz.model.entity.Programme;
+
 public class PerformerDTO {
   
   private Long performerId;
   
-  private String performer;
+  private String performerName;
   
-  public Set<ProgrammeDTO> programmes;
+  public Set<Programme> programmes;
 
-  public String getPerformer() {
-    return performer;
+  public String getPerformerName() {
+    return performerName;
   }
 
   public Long getPerformerId() {
     return performerId;
   }
 
-  public Set<ProgrammeDTO> getProgrammes() {
+  public Set<Programme> getProgrammes() {
     return programmes;
   }
 
-  public void setPerformer(String performer) {
-    this.performer = performer;
+  public void setPerformerName(String performerName) {
+    this.performerName = performerName;
   }
 
   public void setPerformerId(Long performerId) {
     this.performerId = performerId;
   }
 
-  public void setProgrammes(Set<ProgrammeDTO> programmes) {
+  public void setProgrammes(Set<Programme> programmes) {
     this.programmes = programmes;
   }  
 
