@@ -15,6 +15,7 @@ import com.tvfreakz.model.entity.Channel;
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.model.entity.Director;
 import com.tvfreakz.model.entity.Genre;
+import com.tvfreakz.model.entity.Performer;
 import com.tvfreakz.model.entity.Programme;
 
 public class TestUtil {
@@ -36,7 +37,9 @@ public class TestUtil {
   
   public static final ChannelProgramme[] CHANNEL_PROGRAMMES = createChannelProgrammeTestData();
   
-  public static final Genre[] GENRES = createGenreTestData();  
+  public static final Genre[] GENRES = createGenreTestData();
+  
+  public static final Performer[] PERFORMERS = createPerformerTestData();
   
   private static Director[] createDirectorTestData() {
     Director ridleyScott = new Director();
@@ -55,6 +58,23 @@ public class TestUtil {
     return directors;
   }
   
+  private static Performer[] createPerformerTestData() {
+    Performer sigourneyWeaver = new Performer();
+    sigourneyWeaver.setPerformerId(1L);
+    sigourneyWeaver.setPerformerName("Sigourney Weaver");
+    
+    Performer johnHurt = new Performer();
+    johnHurt.setPerformerId(2L);
+    johnHurt.setPerformerName("John Hurt");
+    
+    Performer harrisonFord = new Performer();
+    harrisonFord.setPerformerId(3L);
+    harrisonFord.setPerformerName("Harrison Ford");
+    
+    Performer[] performers = new Performer[]{sigourneyWeaver, johnHurt, harrisonFord};
+    return performers;
+  }
+
   private static Genre[] createGenreTestData() {
     Genre arts = new Genre();
     arts.setGenreId(1L);

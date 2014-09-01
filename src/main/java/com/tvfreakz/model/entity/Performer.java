@@ -6,6 +6,7 @@ package com.tvfreakz.model.entity;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -32,7 +33,8 @@ public class Performer {
   @GenericGenerator(name="increment", strategy="increment")
   private Long performerId;
   
-  private String performer;
+  @Column(name = "PERFORMER")
+  private String performerName;
   
   @ManyToMany(
       cascade = {CascadeType.PERSIST, CascadeType.MERGE},
@@ -41,12 +43,12 @@ public class Performer {
   )
   public Set<Programme> programmes;
   
-  public String getPerformer() {
-    return performer;
+  public String getPerformerName() {
+    return performerName;
   }
   
-  public void setPerformer(String performer) {
-    this.performer = performer;
+  public void setPerformerName(String performerName) {
+    this.performerName = performerName;
   }
   
   public Long getPerformerId() {
