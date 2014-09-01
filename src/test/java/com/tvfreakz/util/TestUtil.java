@@ -35,11 +35,13 @@ public class TestUtil {
   
   public static final Director[] DIRECTORS = createDirectorTestData();
   
+  public static final Channel[] CHANNELS = createChannelTestData();
+  
   public static final ChannelProgramme[] CHANNEL_PROGRAMMES = createChannelProgrammeTestData();
   
   public static final Genre[] GENRES = createGenreTestData();
   
-  public static final Performer[] PERFORMERS = createPerformerTestData();
+  public static final Performer[] PERFORMERS = createPerformerTestData();  
   
   private static Director[] createDirectorTestData() {
     Director ridleyScott = new Director();
@@ -58,6 +60,22 @@ public class TestUtil {
     return directors;
   }
   
+  private static Channel[] createChannelTestData() {
+    Channel bbc1 = new Channel();
+    bbc1.setChannelId(1L);
+    bbc1.setChannelName("BBC 1");
+    
+    Channel bbc2 = new Channel();
+    bbc2.setChannelId(2L);
+    bbc2.setChannelName("BBC 2");
+    
+    Channel bbc3 = new Channel();
+    bbc3.setChannelId(3L);
+    bbc3.setChannelName("BBC 3");
+    
+    return new Channel[]{bbc1, bbc2, bbc3};
+  }
+
   private static Performer[] createPerformerTestData() {
     Performer sigourneyWeaver = new Performer();
     sigourneyWeaver.setPerformerId(1L);
@@ -109,17 +127,9 @@ public class TestUtil {
     genre.setGenreId(1L);
     genre.setGenreName("Scifi");
 
-    Channel bbc1 = new Channel();
-    bbc1.setChannelId(1L);
-    bbc1.setChannelName("BBC 1");
-    
-    Channel bbc2 = new Channel();
-    bbc2.setChannelId(2L);
-    bbc2.setChannelName("BBC 2");
-    
-    Channel bbc3 = new Channel();
-    bbc3.setChannelId(3L);
-    bbc3.setChannelName("BBC 3");
+    Channel bbc1 = CHANNELS[0];    
+    Channel bbc2 = CHANNELS[1];
+    Channel bbc3 = CHANNELS[2];
     
     Programme prog1 = new Programme();
     prog1.setProgrammeId(1L);

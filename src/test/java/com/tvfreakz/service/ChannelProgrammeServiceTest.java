@@ -36,7 +36,7 @@ public class ChannelProgrammeServiceTest {
   
   @Test
   public void testFindScheduledProgrammes() {    
-    when(channelProgrammeRepositoryMock.findAllOrderByProgDateAscStartTimeAsc()).thenReturn(Arrays.asList(TestUtil.CHANNEL_PROGRAMMES));
+    when(channelProgrammeRepositoryMock.findAllByOrderByProgDateAscStartTimeAsc()).thenReturn(Arrays.asList(TestUtil.CHANNEL_PROGRAMMES));
     
     List<ChannelProgramme> channelProgrammeList = channelProgrammeService.findScheduledProgrammes();
     

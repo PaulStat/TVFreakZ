@@ -3,19 +3,24 @@
  */
 package com.tvfreakz.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.data.domain.Sort;
 
 import com.tvfreakz.exception.ChannelNotFoundException;
 import com.tvfreakz.model.entity.Channel;
 import com.tvfreakz.repository.ChannelRepository;
+import com.tvfreakz.util.TestUtil;
 
 public class ChannelServiceTest {
   
@@ -53,6 +58,22 @@ public class ChannelServiceTest {
     channelService.findByChannelId(1L);
     
     verify(channelRepositoryMock, times(1)).findByChannelId(1L);
+    verifyNoMoreInteractions(channelRepositoryMock);
+  }
+  
+  @Test
+  public void testFindAll() throws Exception {
+    Sort sort = new Sort(Sort.Direction.ASC, "channelName");
+    when(channelRepositoryMock.findAll(sort)).thenReturn(Arrays.asList(TestUtil.CHANNELS));
+    
+    List<Channel> channelList = channelService.findAll();
+    
+    assertEquals("Channel list is the wrong size: ", TestUtil.CHANNELS.length, channelList.size());
+    assertEquals("BBC 1", channelList.get(0).getChannelName());
+    assertEquals("BBC 2", channelList.get(1).getChannelName());
+    assertEquals("BBC 3", channelList.get(2).getChannelName());
+
+    verify(channelRepositoryMock, times(1)).findAll(sort);
     verifyNoMoreInteractions(channelRepositoryMock);
   }
 
