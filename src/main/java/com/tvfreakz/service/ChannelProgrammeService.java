@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.tvfreakz.exception.ChannelProgrammeNotFoundException;
+import com.tvfreakz.model.dto.ProgrammeSearchDTO;
 import com.tvfreakz.model.entity.ChannelProgramme;
 
 public interface ChannelProgrammeService {
@@ -24,5 +25,7 @@ public interface ChannelProgrammeService {
   List<ChannelProgramme> findScheduledProgrammeShowings(Long channelProgrammeId) throws ChannelProgrammeNotFoundException;
 
   List<ChannelProgramme> findScheduledProgrammesForPeriod(String startDateTime, String endDateTime);
+
+  List<ChannelProgramme> filterChannelProgrammes(ProgrammeSearchDTO searchDTO);
 
 }

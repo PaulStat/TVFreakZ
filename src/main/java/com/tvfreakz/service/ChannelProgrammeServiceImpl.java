@@ -6,11 +6,13 @@ package com.tvfreakz.service;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tvfreakz.exception.ChannelProgrammeNotFoundException;
+import com.tvfreakz.model.dto.ProgrammeSearchDTO;
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.repository.ChannelProgrammeRepository;
 import com.tvfreakz.util.Utils;
@@ -51,6 +53,7 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
     return channelProgrammeRepository.findScheduledChannelProgrammesForPeriod(channelID, from, to);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public ChannelProgramme findScheduledProgramme(Long channelProgrammeId) throws ChannelProgrammeNotFoundException {
     ChannelProgramme chanProg = channelProgrammeRepository.findByChannelProgrammeId(channelProgrammeId);
@@ -60,6 +63,7 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
     return chanProg;
   }
 
+  @Transactional(readOnly = true)
   @Override
   public List<ChannelProgramme> findScheduledProgrammeShowings(Long channelProgrammeId) throws ChannelProgrammeNotFoundException {
     //First check to see if the Channel Programme exists
@@ -67,11 +71,27 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
     return channelProgrammeRepository.findScheduledProgrammeShowings(channelProgrammeId);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public List<ChannelProgramme> findScheduledProgrammesForPeriod(String startDateTime, String endDateTime) {
     Date from = Utils.DATE_TIME_FORMATTER.parseDateTime(startDateTime).toDate();
     Date to   = Utils.DATE_TIME_FORMATTER.parseDateTime(endDateTime).toDate();
     return channelProgrammeRepository.findScheduledProgrammesForPeriod(from, to);
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public List<ChannelProgramme> filterChannelProgrammes(ProgrammeSearchDTO searchDTO) {
+    String progName = searchDTO.getProgName();
+    String[] channelIDList = searchDTO.getChannelIdList();
+    String[] genreIDList = searchDTO.getGenreIdList();
+    DateTime fromDateTime = searchDTO.getFromDateTime();
+    DateTime toDateTime = searchDTO.getToDateTime();
+    boolean film = searchDTO.isFilm();
+    boolean signed = searchDTO.isSigned();
+    boolean subtitled = searchDTO.isSubtitled();
+
+    return channelProgrammeRepository.filterChannelProgrammes(progName, channelIDList, genreIDList, fromDateTime, toDateTime, subtitled, signed, film);
   }
 
 }
