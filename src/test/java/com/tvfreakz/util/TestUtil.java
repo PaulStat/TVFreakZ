@@ -19,10 +19,10 @@ import com.tvfreakz.model.entity.Performer;
 import com.tvfreakz.model.entity.Programme;
 
 public class TestUtil {
-  
+
   public static final Date TODAY = new LocalDate().toDateTimeAtStartOfDay().toDate();
   public static final Date TWO_WEEKS = new LocalDate().toDateTimeAtStartOfDay().plusWeeks(2).toDate();
-  
+
   public static final Date NOW = new LocalTime().toDateTimeToday().withSecondOfMinute(0).withMillisOfSecond(0).toDate();
   public static final Date TWO_HOURS = new LocalTime().plusHours(2).toDateTimeToday().withSecondOfMinute(0).withMillisOfSecond(0).toDate();
 
@@ -30,19 +30,29 @@ public class TestUtil {
       MediaType.APPLICATION_JSON.getSubtype(),                        
       Charset.forName("utf8")                     
       );
-  
+
   public static final String DATE_TIME_FORMAT = "yyyyMMddHHmm";
-  
+
   public static final Director[] DIRECTORS = createDirectorTestData();
-  
+
   public static final Channel[] CHANNELS = createChannelTestData();
-  
+
   public static final ChannelProgramme[] CHANNEL_PROGRAMMES = createChannelProgrammeTestData();
-  
+
   public static final Genre[] GENRES = createGenreTestData();
-  
-  public static final Performer[] PERFORMERS = createPerformerTestData();  
-  
+
+  public static final Performer[] PERFORMERS = createPerformerTestData();
+
+  public static String createStringWithLength(int length) {
+    StringBuilder builder = new StringBuilder();
+
+    for (int index = 0; index < length; index++) {
+      builder.append("a");
+    }
+
+    return builder.toString();
+  }
+
   private static Director[] createDirectorTestData() {
     Director ridleyScott = new Director();
     ridleyScott.setDirectorId(1L);
@@ -51,28 +61,28 @@ public class TestUtil {
     Director jamesCameron = new Director();
     jamesCameron.setDirectorId(2L);
     jamesCameron.setDirectorName("James Cameron");
-    
+
     Director jeanPierreJeunet = new Director();
     jeanPierreJeunet.setDirectorId(3L);
     jeanPierreJeunet.setDirectorName("Jean-Pierre Jeunet");
-    
+
     Director[] directors = new Director[]{ridleyScott, jamesCameron, jeanPierreJeunet};
     return directors;
   }
-  
+
   private static Channel[] createChannelTestData() {
     Channel bbc1 = new Channel();
     bbc1.setChannelId(1L);
     bbc1.setChannelName("BBC 1");
-    
+
     Channel bbc2 = new Channel();
     bbc2.setChannelId(2L);
     bbc2.setChannelName("BBC 2");
-    
+
     Channel bbc3 = new Channel();
     bbc3.setChannelId(3L);
     bbc3.setChannelName("BBC 3");
-    
+
     return new Channel[]{bbc1, bbc2, bbc3};
   }
 
@@ -80,15 +90,15 @@ public class TestUtil {
     Performer sigourneyWeaver = new Performer();
     sigourneyWeaver.setPerformerId(1L);
     sigourneyWeaver.setPerformerName("Sigourney Weaver");
-    
+
     Performer johnHurt = new Performer();
     johnHurt.setPerformerId(2L);
     johnHurt.setPerformerName("John Hurt");
-    
+
     Performer harrisonFord = new Performer();
     harrisonFord.setPerformerId(3L);
     harrisonFord.setPerformerName("Harrison Ford");
-    
+
     Performer[] performers = new Performer[]{sigourneyWeaver, johnHurt, harrisonFord};
     return performers;
   }
@@ -97,23 +107,23 @@ public class TestUtil {
     Genre arts = new Genre();
     arts.setGenreId(1L);
     arts.setGenreName("Arts");
-    
+
     Genre childrens = new Genre();
     childrens.setGenreId(2L);
     childrens.setGenreName("Childrens");
-    
+
     Genre comedy = new Genre();
     comedy.setGenreId(3L);
     comedy.setGenreName("Comedy");
-    
+
     Genre currentAffairs = new Genre();
     currentAffairs.setGenreId(4L);    
     currentAffairs.setGenreName("Current affairs");
-    
+
     Genre documentary = new Genre();
     documentary.setGenreId(5L);
     documentary.setGenreName("Documentary");
-    
+
     Genre[] genres = new Genre[]{arts, childrens, comedy, currentAffairs, documentary};
     return genres;
   }
@@ -130,7 +140,7 @@ public class TestUtil {
     Channel bbc1 = CHANNELS[0];    
     Channel bbc2 = CHANNELS[1];
     Channel bbc3 = CHANNELS[2];
-    
+
     Programme prog1 = new Programme();
     prog1.setProgrammeId(1L);
     prog1.setBlackAndWhite(false);
@@ -169,7 +179,7 @@ public class TestUtil {
     prog3.setProgTitle("Blade Runner");
     prog3.setWideScreen(false);
     prog3.setYear(new LocalDate(1982,1,1).toDate());
-    
+
     Programme prog4 = new Programme();
     prog4.setProgrammeId(2L);
     prog4.setBlackAndWhite(false);
@@ -233,7 +243,7 @@ public class TestUtil {
     chanprog3.setStartTime(new LocalTime(22,30,0).toDateTimeToday().toDate());
     chanprog3.setSubtitles(false);
     chanprog3.setProgramme(prog3);
-    
+
     ChannelProgramme chanprog4 = new ChannelProgramme();
     chanprog4.setChannelProgrammeId(4L);
     chanprog4.setChannel(bbc2);
@@ -250,7 +260,7 @@ public class TestUtil {
     chanprog4.setStartTime(new LocalTime(22,30,0).toDateTimeToday().toDate());
     chanprog4.setSubtitles(false);
     chanprog4.setProgramme(prog4);
-    
+
     ChannelProgramme chanprog5 = new ChannelProgramme();
     chanprog5.setChannelProgrammeId(5L);
     chanprog5.setChannel(bbc1);
@@ -267,7 +277,7 @@ public class TestUtil {
     chanprog5.setStartTime(new LocalTime(22,30,0).toDateTimeToday().toDate());
     chanprog5.setSubtitles(false);
     chanprog5.setProgramme(prog4);
-    
+
     ChannelProgramme chanprog6 = new ChannelProgramme();
     chanprog6.setChannelProgrammeId(6L);
     chanprog6.setChannel(bbc3);

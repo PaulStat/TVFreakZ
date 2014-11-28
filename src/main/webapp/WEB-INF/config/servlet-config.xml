@@ -30,6 +30,9 @@
 			</props>
 		</property>
 	</bean>
+	
+	<bean id="validator"
+      class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"

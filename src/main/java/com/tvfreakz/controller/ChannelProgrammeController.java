@@ -7,13 +7,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.tvfreakz.exception.ChannelNotFoundException;
 import com.tvfreakz.exception.ChannelProgrammeNotFoundException;
@@ -25,12 +31,14 @@ import com.tvfreakz.model.dto.ChannelProgrammeDTO;
 import com.tvfreakz.model.dto.DirectorDTO;
 import com.tvfreakz.model.dto.EpisodeDTO;
 import com.tvfreakz.model.dto.ProgrammeDTO;
+import com.tvfreakz.model.dto.ProgrammeSearchDTO;
 import com.tvfreakz.model.entity.ChannelProgramme;
 import com.tvfreakz.service.ChannelProgrammeService;
 import com.tvfreakz.service.ChannelService;
 import com.tvfreakz.service.DirectorService;
 import com.tvfreakz.service.PerformerService;
 
+@SessionAttributes("filter")
 @Controller
 public class ChannelProgrammeController {
 
@@ -88,6 +96,22 @@ public class ChannelProgrammeController {
   @RequestMapping(value = "/api/programmeshowings/{channelProgrammeId}", method = RequestMethod.GET)
   public List<ChannelProgrammeDTO> findScheduledProgrammeShowings(@PathVariable("channelProgrammeId") Long channelProgrammeId) throws ChannelProgrammeNotFoundException {
     List<ChannelProgramme> chanprogs = channelProgrammeService.findScheduledProgrammeShowings(channelProgrammeId);
+    return createDTOList(chanprogs);
+  }
+  
+  @RequestMapping(value = "/api/filter", method = RequestMethod.POST)
+  public String filterChannelProgrammes(@Valid @ModelAttribute("filter") ProgrammeSearchDTO programmeSearchDTO, BindingResult result, Model model) {
+    if(result.hasErrors()) {
+      return "api/filter";
+    }
+    model.addAttribute("filter", programmeSearchDTO);
+    return "redirect:/filterResults";
+  }
+  
+  @ResponseBody
+  @RequestMapping(value = "/filterResults", method = RequestMethod.GET)
+  public List<ChannelProgrammeDTO> getFilteredChannelProgrammes(@ModelAttribute("filter") ProgrammeSearchDTO programmeSearcDTO) {
+    List<ChannelProgramme> chanprogs = channelProgrammeService.filterChannelProgrammes(programmeSearcDTO);
     return createDTOList(chanprogs);
   }
 

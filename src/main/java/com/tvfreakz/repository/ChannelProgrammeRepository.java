@@ -6,6 +6,7 @@ package com.tvfreakz.repository;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -41,5 +42,8 @@ public interface ChannelProgrammeRepository extends JpaRepository<ChannelProgram
 
   @Query("to do")
   List<ChannelProgramme> findScheduledProgrammesForPeriod(Date from, Date to);
+
+  @Query("to do")
+  List<ChannelProgramme> filterChannelProgrammes(String progName, String[] channelIdList, String[] genreIdList, DateTime fromDateTime, DateTime toDateTime, boolean subtitled, boolean signed, boolean film);
   
 }
