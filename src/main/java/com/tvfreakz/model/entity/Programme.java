@@ -33,7 +33,78 @@ import org.hibernate.annotations.Type;
 @Table(name = "PROGRAMME")
 public class Programme {
   
-  public Programme() {}
+  public static class Builder {
+    private Long programmeId;
+    private Genre genre;
+    private Director director;
+    private String progTitle;
+    private Date year;
+    private boolean film;
+    private boolean wideScreen;
+    private boolean blackAndWhite;
+    private String certificate;
+    private String description;
+    private Set<Performer> performers;
+    
+    public Programme build() {
+      return new Programme(programmeId, progTitle, genre, director, year, film, wideScreen, blackAndWhite, certificate, description, performers);
+    }
+    
+    public Builder withBlackAndWhite(boolean blackAndWhite) {
+      this.blackAndWhite = blackAndWhite;
+      return this;
+    }
+    
+    public Builder withCertificate(String certificate) {
+      this.certificate = certificate;
+      return this;
+    }
+    
+    public Builder withDescription(String description) {
+      this.description = description;
+      return this;
+    }
+    
+    public Builder withDirector(Director director) {
+      this.director = director;
+      return this;
+    }
+    
+    public Builder withFilm(boolean film) {
+      this.film = film;
+      return this;
+    }
+    
+    public Builder withGenre(Genre genre) {
+      this.genre = genre;
+      return this;
+    }
+    
+    public Builder withPerformers(Set<Performer> performers) {
+      this.performers = performers;
+      return this;
+    }
+    
+    public Builder withProgrammeId(Long programmeId) {
+      this.programmeId = programmeId;
+      return this;
+    }
+    
+    public Builder withProgTitle(String progTitle) {
+      this.progTitle = progTitle;
+      return this;
+    }
+    
+    public Builder withWideScreen(boolean wideScreen) {
+      this.wideScreen = wideScreen;
+      return this;
+    }
+    
+    public Builder withYear(Date year) {
+      this.year = year;
+      return this;
+    }
+  }
   
   @Id
   @GeneratedValue(generator="increment")
@@ -44,7 +115,7 @@ public class Programme {
   @OneToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
   @JoinColumn(name="GENREID")
   private Genre genre;
-  
+
   @Type(type="com.tvfreakz.model.Director")
   @OneToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
   @JoinColumn(name="DIRECTORID")
@@ -58,18 +129,18 @@ public class Programme {
   
   @Type(type="org.hibernate.type.BooleanType")
   private boolean film;
-
+  
   @Type(type="org.hibernate.type.BooleanType")
   private boolean wideScreen;
-  
+
   @Column(name = "BNW")
   @Type(type="org.hibernate.type.BooleanType")
   private boolean blackAndWhite;
-  
+
   private String certificate;
   
   private String description;
-  
+
   @ManyToMany(
       targetEntity=Performer.class,
       cascade={CascadeType.PERSIST, CascadeType.MERGE}
@@ -80,27 +151,104 @@ public class Programme {
       inverseJoinColumns=@JoinColumn(name="PERFORMERID")
   )
   private Set<Performer> performers;
+  
+  public Programme() {}
+  
+  public Programme(Long programmeId, String progTitle, Genre genre, Director director, Date year, boolean film, boolean wideScreen, boolean blackAndWhite, String certificate, String description, Set<Performer> performers) {
+    this.programmeId = programmeId;
+    this.progTitle = progTitle;
+    this.genre = genre;
+    this.director = director;
+    this.year = year;
+    this.film = film;
+    this.wideScreen = wideScreen;
+    this.blackAndWhite = blackAndWhite;
+    this.certificate = certificate;
+    this.description = description;
+    this.performers = performers;
+  }
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Programme other = (Programme) obj;
+    if (blackAndWhite != other.blackAndWhite)
+      return false;
+    if (certificate == null) {
+      if (other.certificate != null)
+        return false;
+    } else if (!certificate.equals(other.certificate))
+      return false;
+    if (description == null) {
+      if (other.description != null)
+        return false;
+    } else if (!description.equals(other.description))
+      return false;
+    if (director == null) {
+      if (other.director != null)
+        return false;
+    } else if (!director.equals(other.director))
+      return false;
+    if (film != other.film)
+      return false;
+    if (genre == null) {
+      if (other.genre != null)
+        return false;
+    } else if (!genre.equals(other.genre))
+      return false;
+    if (progTitle == null) {
+      if (other.progTitle != null)
+        return false;
+    } else if (!progTitle.equals(other.progTitle))
+      return false;
+    if (programmeId == null) {
+      if (other.programmeId != null)
+        return false;
+    } else if (!programmeId.equals(other.programmeId))
+      return false;
+    if (wideScreen != other.wideScreen)
+      return false;
+    if (year == null) {
+      if (other.year != null)
+        return false;
+    } else if (!year.equals(other.year))
+      return false;
+    return true;
+  }
+  
+  /**
+   * @return the certificate
+   */
+  public String getCertificate() {
+    return certificate;
+  }
 
-  public Genre getGenre() {
-    return genre;
+  public String getDescription() {
+    return description;
   }  
 
   public Director getDirector() {
     return director;
   }
   
+  public Genre getGenre() {
+    return genre;
+  }
+
+  public Set<Performer> getPerformers() {
+    return performers;
+  }
+
   /**
    * @return the programmeId
    */
   public Long getProgrammeId() {
     return programmeId;
-  }
-
-  /**
-   * @param programmeId the programmeId to set
-   */
-  public void setProgrammeId(Long programmeId) {
-    this.programmeId = programmeId;
   }
 
   /**
@@ -111,52 +259,27 @@ public class Programme {
   }
 
   /**
-   * @param progTitle the progTitle to set
-   */
-  public void setProgTitle(String progTitle) {
-    this.progTitle = progTitle;
-  }
-
-  /**
    * @return the year
    */
   public Date getYear() {
     return year;
   }
 
-  /**
-   * @param year the year to set
-   */
-  public void setYear(Date year) {
-    this.year = year;
-  }
-
-  /**
-   * @return the film
-   */
-  public boolean isFilm() {
-    return film;
-  }
-
-  /**
-   * @param film the film to set
-   */
-  public void setFilm(boolean film) {
-    this.film = film;
-  }
-
-  /**
-   * @return the wideScreen
-   */
-  public boolean isWideScreen() {
-    return wideScreen;
-  }
-
-  /**
-   * @param wideScreen the wideScreen to set
-   */
-  public void setWideScreen(boolean wideScreen) {
-    this.wideScreen = wideScreen;
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + (blackAndWhite ? 1231 : 1237);
+    result = prime * result + ((certificate == null) ? 0 : certificate.hashCode());
+    result = prime * result + ((description == null) ? 0 : description.hashCode());
+    result = prime * result + ((director == null) ? 0 : director.hashCode());
+    result = prime * result + (film ? 1231 : 1237);
+    result = prime * result + ((genre == null) ? 0 : genre.hashCode());
+    result = prime * result + ((progTitle == null) ? 0 : progTitle.hashCode());
+    result = prime * result + ((programmeId == null) ? 0 : programmeId.hashCode());
+    result = prime * result + (wideScreen ? 1231 : 1237);
+    result = prime * result + ((year == null) ? 0 : year.hashCode());
+    return result;
   }
 
   /**
@@ -167,17 +290,24 @@ public class Programme {
   }
 
   /**
+   * @return the film
+   */
+  public boolean isFilm() {
+    return film;
+  }
+
+  /**
+   * @return the wideScreen
+   */
+  public boolean isWideScreen() {
+    return wideScreen;
+  }
+
+  /**
    * @param blackAndWhite the blackAndWhite to set
    */
   public void setBlackAndWhite(boolean blackAndWhite) {
     this.blackAndWhite = blackAndWhite;
-  }
-
-  /**
-   * @return the certificate
-   */
-  public String getCertificate() {
-    return certificate;
   }
 
   /**
@@ -187,11 +317,8 @@ public class Programme {
     this.certificate = certificate;
   }
 
-  /**
-   * @param genre the genre to set
-   */
-  public void setGenre(Genre genre) {
-    this.genre = genre;
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   /**
@@ -200,21 +327,51 @@ public class Programme {
   public void setDirector(Director director) {
     this.director = director;
   }
-  
-  public Set<Performer> getPerformers() {
-    return performers;
+
+  /**
+   * @param film the film to set
+   */
+  public void setFilm(boolean film) {
+    this.film = film;
   }
-  
+
+  /**
+   * @param genre the genre to set
+   */
+  public void setGenre(Genre genre) {
+    this.genre = genre;
+  }
+
   public void setPerformers(Set<Performer> performers) {
     this.performers = performers;
   }
   
-  public String getDescription() {
-    return description;
+  /**
+   * @param programmeId the programmeId to set
+   */
+  public void setProgrammeId(Long programmeId) {
+    this.programmeId = programmeId;
   }
   
-  public void setDescription(String description) {
-    this.description = description;
+  /**
+   * @param progTitle the progTitle to set
+   */
+  public void setProgTitle(String progTitle) {
+    this.progTitle = progTitle;
+  }
+  
+  /**
+   * @param wideScreen the wideScreen to set
+   */
+  public void setWideScreen(boolean wideScreen) {
+    this.wideScreen = wideScreen;
+  }
+  
+  /**
+   * @param year the year to set
+   */
+  public void setYear(Date year) {
+    this.year = year;
   }
 
 }

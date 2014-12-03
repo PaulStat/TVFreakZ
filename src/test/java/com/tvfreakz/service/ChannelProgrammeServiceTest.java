@@ -48,15 +48,9 @@ public class ChannelProgrammeServiceTest {
     boolean signed = false;
     boolean film = true;
     
-    ProgrammeSearchDTO searchDTO = new ProgrammeSearchDTO();
-    searchDTO.setProgName(progName);
-    searchDTO.setChannelIdList(channelIdList);
-    searchDTO.setGenreIdList(genreIdList);
-    searchDTO.setFromDateTime(fromDateTime);
-    searchDTO.setToDateTime(toDateTime);
-    searchDTO.setSubtitled(subtitled);
-    searchDTO.setSigned(signed);
-    searchDTO.setFilm(film);
+    ProgrammeSearchDTO searchDTO = new ProgrammeSearchDTO.Builder().withProgName(progName).withChannelIdList(channelIdList)
+        .withGenreIdList(genreIdList).withFromDateTime(fromDateTime).withToDateTime(toDateTime).withSubtitled(subtitled)
+        .withSigned(signed).withFilm(film).build();
 
     ChannelProgramme[] channelProgrammeShowings = new ChannelProgramme[]{TestUtil.CHANNEL_PROGRAMMES[1]};
     
