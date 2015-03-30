@@ -15,35 +15,50 @@ import org.springframework.stereotype.Repository;
 import com.tvfreakz.model.entity.ChannelProgramme;
 
 @Repository("channelProgrammeRepository")
-public interface ChannelProgrammeRepository extends JpaRepository<ChannelProgramme, Long> {
+public interface ChannelProgrammeRepository extends
+        JpaRepository<ChannelProgramme, Long> {
 
-  List<ChannelProgramme> findAllByOrderByProgDateAscStartTimeAsc();
+    @Query("Select cp from ChannelProgramme cp")
+    List<ChannelProgramme> filterChannelProgrammes(String progName,
+            String[] channelIdList, String[] genreIdList,
+            DateTime fromDateTime, DateTime toDateTime, boolean subtitled,
+            boolean signed, boolean film);
 
-  @Query("Select new com.tvfreakz.model.ChannelProgramme() from ChannelProgramme cp, Programme p"
-      + " where (cp.programme.programmeId = p.programmeId) AND (programme.director.directorId = :directorID) AND (cp.progDate BETWEEN :fromDate AND :toDate)"
-      + " ORDER BY cp.progDate, cp.startTime")
-  List<ChannelProgramme> findScheduledDirectorProgrammes(@Param("directorID") Long directorID, @Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
+    List<ChannelProgramme> findAllByOrderByStartTimeAsc();
 
-  @Query("Select new com.tvfreakz.model.ChannelProgramme() from ChannelProgramme cp"
-      + " where cp.programme.programmeId in (select programmeId from Programme programme"
-      + " inner join programme.performers performer"
-      + " where performer.performerId in :performerID)"
-      + " AND (cp.progDate BETWEEN :fromDate AND :toDate)"
-      + " ORDER BY cp.progDate, cp.startTime")
-  List<ChannelProgramme> findScheduledPerformerProgrammes(@Param("performerID") Long performerId, @Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
+    ChannelProgramme findByChannelProgrammeId(Long channelProgrammeId);
 
-  @Query("to do")
-  List<ChannelProgramme> findScheduledChannelProgrammesForPeriod(Long channelID, Date from, Date to);
+    @Query("Select cp from ChannelProgramme cp"
+            + " where (cp.channel.channelId = :channelID) AND (cp.startTime BETWEEN :fromDate AND :toDate)"
+            + " ORDER BY cp.startTime, cp.startTime")
+    List<ChannelProgramme> findScheduledChannelProgrammesForPeriod(
+            @Param("channelID") Long channelID, @Param("fromDate") Date from,
+            @Param("toDate") Date to);
 
-  ChannelProgramme findByChannelProgrammeId(Long channelProgrammeId);
+    @Query("Select cp from ChannelProgramme cp, Programme p"
+            + " where (cp.programme.programmeId = p.programmeId) AND (cp.programme.director.directorId = :directorID) AND (cp.startTime BETWEEN :fromDate AND :toDate)"
+            + " ORDER BY cp.startTime, cp.startTime")
+    List<ChannelProgramme> findScheduledDirectorProgrammes(
+            @Param("directorID") Long directorID,
+            @Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
-  @Query("to do")
-  List<ChannelProgramme> findScheduledProgrammeShowings(Long channelProgrammeId);
+    @Query("Select cp from ChannelProgramme cp"
+            + " where cp.programme.programmeId in (select programme.programmeId from ProgEpPerfAssociation programme"
+            + " where programme.performerId = :performerID)"
+            + " AND (cp.startTime BETWEEN :fromDate AND :toDate)"
+            + " ORDER BY cp.startTime, cp.startTime")
+    List<ChannelProgramme> findScheduledPerformerProgrammes(
+            @Param("performerID") Long performerId,
+            @Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
-  @Query("to do")
-  List<ChannelProgramme> findScheduledProgrammesForPeriod(Date from, Date to);
+    @Query("Select cp from ChannelProgramme cp"
+            + " where cp.startTime BETWEEN :fromDate AND :toDate")
+    List<ChannelProgramme> findScheduledProgrammesForPeriod(
+            @Param("fromDate") Date from, @Param("toDate") Date to);
 
-  @Query("to do")
-  List<ChannelProgramme> filterChannelProgrammes(String progName, String[] channelIdList, String[] genreIdList, DateTime fromDateTime, DateTime toDateTime, boolean subtitled, boolean signed, boolean film);
-  
+    @Query("Select cp from ChannelProgramme cp"
+            + " where cp.programme.programmeId = :programmeID")
+    List<ChannelProgramme> findScheduledProgrammeShowings(
+            @Param("programmeID") Long programmeId);
+
 }

@@ -13,38 +13,41 @@ import org.junit.Test;
 
 import com.tvfreakz.model.entity.Director;
 import com.tvfreakz.model.entity.Episode;
-import com.tvfreakz.model.entity.Performer;
-import com.tvfreakz.model.entity.Programme;
+import com.tvfreakz.model.entity.ProgEpPerfAssociation;
 
 public class EpisodeBuilderTest {
-  
-  private Episode expected;
-  private Long episodeId = 1L;
-  private Programme programme = new Programme.Builder().withProgrammeId(1L).withProgTitle("Aliens").build();
-  private Director director = new Director.Builder().withDirectorId(1L).withDirectorName("James Cameron").build();
-  private String subtitle = "";
-  private String episode = "";
-  private String description = "";
-  private Set<Performer> performers;
-  
-  @Before
-  public void setup() {
-    expected = new Episode(episodeId, programme, director, subtitle, episode, description, performers);
-  }
-  
-  @Test
-  public void testEpisodeBuilderBuildObjectsShouldBeEqual() {
-    Episode actual = new Episode.Builder().withEpisodeId(episodeId).withProgramme(programme).withDirector(director).withSubtitle(subtitle)
-        .withEpisode(episode).withDescription(description).withPerformers(performers).build();
-    
-    assertEquals(expected, actual);    
-  }
-  
-  @Test
-  public void testEpisodeBuilderBuildObjectsShouldNotBeEqual() {
-    Episode actual = new Episode.Builder().withEpisodeId(episodeId).build();
-    
-    assertNotEquals(expected, actual);
-  }
+
+    private Episode expected;
+    private Long episodeId = 1L;
+    private Director director = new Director.Builder().withDirectorId(1L)
+            .withDirectorName("James Cameron").build();
+    private String subtitle = "";
+    private String episode = "";
+    private String description = "";
+    private Set<ProgEpPerfAssociation> episodeAssociations;
+
+    @Before
+    public void setup() {
+        expected = new Episode(episodeId, director, subtitle,
+                episode, description, episodeAssociations);
+    }
+
+    @Test
+    public void testEpisodeBuilderBuildObjectsShouldBeEqual() {
+        Episode actual = new Episode.Builder().withEpisodeId(episodeId)
+                .withDirector(director)
+                .withSubtitle(subtitle).withEpisode(episode)
+                .withDescription(description)
+                .withEpisodeAssociations(episodeAssociations).build();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testEpisodeBuilderBuildObjectsShouldNotBeEqual() {
+        Episode actual = new Episode.Builder().withEpisodeId(episodeId).build();
+
+        assertNotEquals(expected, actual);
+    }
 
 }

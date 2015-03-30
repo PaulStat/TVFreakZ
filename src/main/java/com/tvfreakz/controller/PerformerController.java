@@ -39,7 +39,7 @@ public class PerformerController {
       PerformerDTO dto = new PerformerDTO();
       dto.setPerformerId(performer.getPerformerId());
       dto.setPerformerName(performer.getPerformerName());
-      dto.setProgrammes(performer.getProgrammes());
+      dto.setPerformerAssociations(performer.getPerformerAssociations());
       performerDTOs.add(dto);
     }
     return performerDTOs;

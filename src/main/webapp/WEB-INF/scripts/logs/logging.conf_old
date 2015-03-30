@@ -1,0 +1,36 @@
+[loggers]
+keys=root,email
+
+[logger_root]
+level=DEBUG
+handlers=rotatingFileHandler
+
+[logger_email]
+level=ERROR
+handlers=email
+qualname=email
+
+[formatters]
+keys=emailFormatter,rotatingFormatter
+
+[formatter_emailFormatter]
+format=%(asctime)s %(name)-12s %(levelname)-8s %(message)s
+
+[formatter_rotatingFormatter]
+format=%(asctime)s %(name)-12s %(levelname)-8s %(message)s
+datefmt=%m-%d %H:%M
+
+[handlers]
+keys=email,rotatingFileHandler
+
+[handler_email]
+class=handlers.SMTPHandler
+level=ERROR
+formatter=emailFormatter
+args=('mail.paulstathamphotography.co.uk','paul@paulstathamphotography.co.uk',['pstatham@sefas.com',],'ERROR!',('paul@paulstathamphotography.co.uk','Beau100cl'))
+
+[handler_rotatingFileHandler]
+class=handlers.RotatingFileHandler
+level=DEBUG
+formatter=rotatingFormatter
+args=('./logs/log.out', 'maxBytes=1000000', 'backupCount=5')
