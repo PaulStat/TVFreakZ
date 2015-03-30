@@ -12,38 +12,42 @@ import org.junit.Test;
 
 public class ProgrammeSearchDTOBuilderTest {
 
-  private ProgrammeSearchDTO expectedDTO;
+    private ProgrammeSearchDTO expectedDTO;
 
-  private String[] channelIdList = new String[]{"1"};
-  private String[] genreIdList = new String[]{"1"};
-  private DateTime fromDateTime = new DateTime();
-  private DateTime toDateTime = new DateTime();
-  private String progName = "Aliens";
-  private boolean subtitled = false;
-  private boolean signed = false;
-  private boolean film = true;
+    private String[] channelIdList = new String[] { "1" };
+    private String[] genreIdList = new String[] { "1" };
+    private DateTime fromDateTime = new DateTime();
+    private DateTime toDateTime = new DateTime();
+    private String progName = "Aliens";
+    private boolean subtitled = false;
+    private boolean signed = false;
+    private boolean film = true;
 
-  @Before
-  public void setup() {
-    expectedDTO = new ProgrammeSearchDTO(channelIdList, genreIdList, fromDateTime,
-        toDateTime, progName, subtitled, signed, film);    
-  }
+    @Before
+    public void setup() {
+        expectedDTO = new ProgrammeSearchDTO(channelIdList, genreIdList,
+                fromDateTime, toDateTime, progName, subtitled, signed, film);
+    }
 
-  @Test
-  public void testProgrammeSearchDTOBuilderBuildObjectsShouldBeEqual() {
-    ProgrammeSearchDTO.Builder builder = new ProgrammeSearchDTO.Builder();
-    ProgrammeSearchDTO actualDTO = builder.withChannelIdList(channelIdList).withGenreIdList(genreIdList).withFromDateTime(fromDateTime)
-        .withToDateTime(toDateTime).withProgName(progName).withSubtitled(subtitled).withSigned(signed).withFilm(film).build();
+    @Test
+    public void testProgrammeSearchDTOBuilderBuildObjectsShouldBeEqual() {
+        ProgrammeSearchDTO.Builder builder = new ProgrammeSearchDTO.Builder();
+        ProgrammeSearchDTO actualDTO = builder.withChannelIdList(channelIdList)
+                .withGenreIdList(genreIdList).withFromDateTime(fromDateTime)
+                .withToDateTime(toDateTime).withProgName(progName)
+                .withSubtitled(subtitled).withSigned(signed).withFilm(film)
+                .build();
 
-    assertEquals(expectedDTO, actualDTO);
-  }
+        assertEquals(expectedDTO, actualDTO);
+    }
 
-  @Test
-  public void testProgrammeSearchDTOBuilderBuildObjectsShouldNotBeEqual() {
-    ProgrammeSearchDTO.Builder builder = new ProgrammeSearchDTO.Builder();
-    ProgrammeSearchDTO actualDTO = builder.withChannelIdList(channelIdList).build();
-    
-    assertNotEquals(expectedDTO, actualDTO);
-  }
+    @Test
+    public void testProgrammeSearchDTOBuilderBuildObjectsShouldNotBeEqual() {
+        ProgrammeSearchDTO.Builder builder = new ProgrammeSearchDTO.Builder();
+        ProgrammeSearchDTO actualDTO = builder.withChannelIdList(channelIdList)
+                .build();
+
+        assertNotEquals(expectedDTO, actualDTO);
+    }
 
 }

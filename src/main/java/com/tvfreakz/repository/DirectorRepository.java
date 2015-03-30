@@ -11,6 +11,6 @@ import com.tvfreakz.model.entity.Director;
 @Repository("directorRepository")
 public interface DirectorRepository extends JpaRepository<Director, Long> {
 
-  Director findByDirectorId(Long directorId);
+    Director findByDirectorId(Long directorId);
 
 }

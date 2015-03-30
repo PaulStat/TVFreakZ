@@ -33,43 +33,47 @@ import com.tvfreakz.service.GenreService;
 import com.tvfreakz.util.TestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/config/testMVCContext.xml", "file:src/main/webapp/WEB-INF/config/servlet-config.xml"})
+@ContextConfiguration(locations = {
+        "file:src/main/webapp/WEB-INF/config/testMVCContext.xml",
+        "file:src/main/webapp/WEB-INF/config/servlet-config.xml" })
 @WebAppConfiguration
 public class GenreControllerTest {
-  
-  private MockMvc mockMvc;
-  
-  @Autowired
-  private GenreService genreServiceMock;
-  
-  @Autowired
-  private WebApplicationContext webApplicationContext;
-  
-  @Before
-  public void setUp() {
-    Mockito.reset(genreServiceMock);
-    
-    mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-  }
-  
-  @Test
-  public void testFindAll() throws Exception {
-    when(genreServiceMock.findAll()).thenReturn(Arrays.asList(TestUtil.GENRES));
-    
-    mockMvc.perform(get("/api/genres"))
-    .andDo(print())
-    .andExpect(status().isOk())
-    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-    .andExpect(jsonPath("$", hasSize(TestUtil.GENRES.length)))
-    .andExpect(jsonPath("$[0].genreName", is("Arts")))
-    .andExpect(jsonPath("$[1].genreName", is("Childrens")))
-    .andExpect(jsonPath("$[2].genreName", is("Comedy")))
-    .andExpect(jsonPath("$[3].genreName", is("Current affairs")))
-    .andExpect(jsonPath("$[4].genreName", is("Documentary")));
 
-    verify(genreServiceMock, times(1)).findAll();
-    verifyNoMoreInteractions(genreServiceMock);
-  }
+    private MockMvc mockMvc;
 
+    @Autowired
+    private GenreService genreServiceMock;
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @Before
+    public void setUp() {
+        Mockito.reset(genreServiceMock);
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .build();
+    }
+
+    @Test
+    public void testFindAll() throws Exception {
+        when(genreServiceMock.findAll()).thenReturn(
+                Arrays.asList(TestUtil.GENRES));
+
+        mockMvc.perform(get("/api/genres"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(
+                        content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(TestUtil.GENRES.length)))
+                .andExpect(jsonPath("$[0].genreName", is("Arts")))
+                .andExpect(jsonPath("$[1].genreName", is("Childrens")))
+                .andExpect(jsonPath("$[2].genreName", is("Comedy")))
+                .andExpect(jsonPath("$[3].genreName", is("Current affairs")))
+                .andExpect(jsonPath("$[4].genreName", is("Documentary")));
+
+        verify(genreServiceMock, times(1)).findAll();
+        verifyNoMoreInteractions(genreServiceMock);
+    }
 
 }

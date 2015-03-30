@@ -36,7 +36,7 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
   @Transactional(readOnly = true)
   @Override
   public List<ChannelProgramme> findScheduledProgrammes() {
-    return channelProgrammeRepository.findAllByOrderByProgDateAscStartTimeAsc();
+    return channelProgrammeRepository.findAllByOrderByStartTimeAsc();
   }
 
   @Transactional(readOnly = true)
@@ -65,10 +65,10 @@ public class ChannelProgrammeServiceImpl implements ChannelProgrammeService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<ChannelProgramme> findScheduledProgrammeShowings(Long channelProgrammeId) throws ChannelProgrammeNotFoundException {
+  public List<ChannelProgramme> findScheduledProgrammeShowings(Long programmeId) throws ChannelProgrammeNotFoundException {
     //First check to see if the Channel Programme exists
-    findScheduledProgramme(channelProgrammeId);
-    return channelProgrammeRepository.findScheduledProgrammeShowings(channelProgrammeId);
+    findScheduledProgramme(programmeId);
+    return channelProgrammeRepository.findScheduledProgrammeShowings(programmeId);
   }
 
   @Transactional(readOnly = true)

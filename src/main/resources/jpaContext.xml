@@ -10,7 +10,7 @@
 
 	<context:annotation-config />
 	
-	<context:component-scan base-package="com.tvfreakz"/>	
+	<context:component-scan base-package="com.tvfreakz"/>		
 	
     <jpa:repositories base-package="com.tvfreakz.repository"/>
 	
@@ -37,14 +37,13 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory"/>
 	</bean>
 	
-	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<tx:annotation-driven transaction-manager="transactionManager"/> 
 	
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+<!--  	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 		<property name="url" value="jdbc:mysql://172.28.84.209:3306/tvlistings?autoReconnect=true"/>
 		<property name="username" value="root"/>
 		<property name="password" value="xxx"/>
-	</bean>
-
+	</bean> -->
 
 </beans>

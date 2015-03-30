@@ -1,0 +1,51 @@
+
+Select programmes on BBC1, programmes currently on/due to be on
+---------------------------------------------------------------
+select
+    p.progtitle, c.progdate,
+    c.starttime, c.endtime
+from
+    programme p
+    inner join channelprogramme c on c.programmeid=p.programmeid
+where
+    c.channelid=92 and (c.progdate >= curdate() and c.endtime >= curtime())
+order by c.progdate, c.starttime;
+
+Select all showings of '16 and pregnant' on all channels on now or due to be shown
+----------------------------------------------------------------------------------
+select
+    ch.channelname, p.progtitle,
+    c.progdate, c.starttime, c.endtime
+from
+    channelprogramme c
+    inner join programme p on p.programmeid=c.programmeid
+    inner join channels ch on ch.channelid=c.channelid
+where
+    c.programmeid=33 and (c.progdate >= curdate() and c.endtime >= curtime())
+order by c.progdate, c.starttime;
+
+Select all showings of 'CSI:NY 12/23, series 1' on all channels on now or due to be shown
+----------------------------------------------------------------------------------
+select
+    ch.channelname, p.progtitle, e.subtitle, e.episode,
+    c.progdate, c.starttime, c.endtime
+from
+    channelprogramme c
+    inner join programme p on p.programmeid=c.programmeid
+    inner join channels ch on ch.channelid=c.channelid
+    inner join episode e on e.episodeid=c.episodeid
+where
+    (c.programmeid=1702 and c.episodeid=5871) and (c.progdate >= curdate() and c.endtime >= curtime())
+order by c.progdate, c.starttime;
+
+Select all films on BBC1
+----------------------------------------------------------------------
+select
+    p.progtitle, c.starrating, c.progdate,
+    c.starttime, c.endtime
+from
+    channelprogramme c
+    inner join programme p on p.programmeid=c.programmeid
+where
+    c.channelid=92 and (p.genreid=4 or p.film=1) and (c.progdate >= curdate() and c.endtime >= curtime())
+order by c.progdate, c.starttime;

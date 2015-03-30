@@ -6,6 +6,7 @@ import java.util.Set;
 import com.tvfreakz.model.entity.Director;
 import com.tvfreakz.model.entity.Genre;
 import com.tvfreakz.model.entity.Performer;
+import com.tvfreakz.model.entity.ProgEpPerfAssociation;
 
 public class ProgrammeDTO {
   
@@ -29,7 +30,7 @@ public class ProgrammeDTO {
   
   private String description;
   
-  private Set<Performer> performers;
+  private Set<ProgEpPerfAssociation> programmeAssociations;
 
   public String getCertificate() {
     return certificate;
@@ -47,8 +48,8 @@ public class ProgrammeDTO {
     return genre;
   }
 
-  public Set<Performer> getPerformers() {
-    return performers;
+  public Set<ProgEpPerfAssociation> getProgrammeAssociations() {
+    return programmeAssociations;
   }
 
   public Long getProgrammeId() {
@@ -99,8 +100,8 @@ public class ProgrammeDTO {
     this.genre = genre;
   }
 
-  public void setPerformers(Set<Performer> performers) {
-    this.performers = performers;
+  public void setProgrammeAssociations(Set<ProgEpPerfAssociation> programmeAssociations) {
+    this.programmeAssociations = programmeAssociations;
   }
 
   public void setProgrammeId(Long programmeId) {

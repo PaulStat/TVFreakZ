@@ -3,6 +3,7 @@ package com.tvfreakz.model.dto;
 import java.util.Set;
 
 import com.tvfreakz.model.entity.Performer;
+import com.tvfreakz.model.entity.ProgEpPerfAssociation;
 
 public class EpisodeDTO {
   
@@ -18,7 +19,7 @@ public class EpisodeDTO {
   
   private String description;
   
-  private Set<Performer> performers;
+  private Set<ProgEpPerfAssociation> episodeAssociations;
 
   public String getDescription() {
     return description;
@@ -36,8 +37,8 @@ public class EpisodeDTO {
     return episodeId;
   }
 
-  public Set<Performer> getPerformers() {
-    return performers;
+  public Set<ProgEpPerfAssociation> getEpisodeAssociations() {
+    return episodeAssociations;
   }
 
   public ProgrammeDTO getProgramme() {
@@ -64,8 +65,8 @@ public class EpisodeDTO {
     this.episodeId = episodeId;
   }
 
-  public void setPerformers(Set<Performer> performers) {
-    this.performers = performers;
+  public void setEpisodeAssociations(Set<ProgEpPerfAssociation> episodeAssociations) {
+    this.episodeAssociations = episodeAssociations;
   }
 
   public void setProgramme(ProgrammeDTO programme) {

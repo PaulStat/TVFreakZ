@@ -26,8 +26,6 @@ public class ChannelProgrammeDTO {
   
   private Integer starRating;
   
-  private Date progDate;
-  
   private Date startTime;
   
   private Date endTime;
@@ -52,10 +50,6 @@ public class ChannelProgrammeDTO {
 
   public EpisodeDTO getEpisode() {
     return episode;
-  }
-
-  public Date getProgDate() {
-    return progDate;
   }
 
   public ProgrammeDTO getProgramme() {
@@ -128,10 +122,6 @@ public class ChannelProgrammeDTO {
 
   public void setPremiere(boolean premiere) {
     this.premiere = premiere;
-  }
-
-  public void setProgDate(Date progDate) {
-    this.progDate = progDate;
   }
 
   public void setProgramme(ProgrammeDTO programme) {
