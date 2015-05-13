@@ -1,12 +1,12 @@
 <!ELEMENT dataset (
-    channelprogramme*,
+    performer*,
+    genre*,
     channels*,
     director*,
+    programme*,
     episode*,
-    genre*,
-    performer*,
-    prog_performer*,
-    programme*)>
+    prog_ep_perf*,
+    channelprogramme*)>
 
 <!ELEMENT channelprogramme EMPTY>
 <!ATTLIST channelprogramme
@@ -61,8 +61,8 @@
     PERFORMER CDATA #IMPLIED
 >
 
-<!ELEMENT prog_performer EMPTY>
-<!ATTLIST prog_performer
+<!ELEMENT prog_ep_perf EMPTY>
+<!ATTLIST prog_ep_perf
     PROGRAMMEID CDATA #REQUIRED
     EPISODEID CDATA #REQUIRED
     PERFORMERID CDATA #REQUIRED

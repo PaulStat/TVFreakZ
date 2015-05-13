@@ -35,11 +35,11 @@ public interface ChannelProgrammeRepository extends JpaRepository<ChannelProgram
   List<ChannelProgramme> findScheduledDirectorProgrammes(@Param("directorID") Long directorID, @Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
   @Query("Select cp from ChannelProgramme cp"
-      + " where cp.programme.programmeId in (select programme.programmeId from Programme programme"
-      + " inner join programme.performers performer"
-      + " where performer.performerId in :performerID)"
-      + " AND (cp.progDate BETWEEN :fromDate AND :toDate)"
-      + " ORDER BY cp.progDate, cp.startTime")
+          + " where cp.programme.programmeId in (select programme.programmeId from ProgEpPerfAssociation programme"
+          + " inner join programme.performer performer"
+          + " where performer.performerId in :performerID)"
+          + " AND (cp.progDate BETWEEN :fromDate AND :toDate)"
+          + " ORDER BY cp.progDate, cp.startTime")
   List<ChannelProgramme> findScheduledPerformerProgrammes(@Param("performerID") Long performerId, @Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
   @Query("Select cp from ChannelProgramme cp"

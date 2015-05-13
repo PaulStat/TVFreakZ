@@ -1,1 +1,1 @@
-04-13 21:59 email        ERROR    Error during update channel programmes: (1452, 'Cannot add or update a child row: a foreign key constraint fails (`tvlistings`.`prog_performer`, CONSTRAINT `prog_performer_ibfk_1` FOREIGN KEY (`PROGRAMMEID`) REFERENCES `genre` (`GENREID`))')
+04-30 22:05 email        ERROR    Error during load prog data: not enough arguments for format string

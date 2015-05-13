@@ -13,6 +13,7 @@ import cStringIO
 import logging.config
 
 from time import gmtime, strftime
+from datetime import datetime, timedelta
 
 __metaclass__ = type
 
@@ -64,10 +65,10 @@ class Processing:
       self._channelPrograms = []
       logging.config.fileConfig(self._logsDir+'logging.conf')
       self._logger = logging.getLogger('email')
-      self._dbase = MySQLdb.connect(user="root",passwd="beau10cl",db="tvlistings")
+      self._dbase = MySQLdb.connect(user="test",passwd="test",db="tvlistings")
       self._cursor = self._dbase.cursor()
 
-   def SetupEnvironment(self):
+   def setupEnvironment(self):
       try:
           # Create temporary tables for loading buffered data
           self._cursor.execute("""CREATE TEMPORARY TABLE TVTEMPTABLE (
@@ -76,7 +77,7 @@ class Processing:
                                   PERFORMERS TEXT, PREMIERE BOOL, FILM BOOL, RPEAT BOOL,
                                   SUBTITLES BOOL, WIDESCREEN BOOL, NEWSERIES BOOL, DEAFSIGNED BOOL,
                                   BNW BOOL, STARRATING TINYINT, CERTIFICATE VARCHAR(5), GENRENAME VARCHAR(70),
-                                  DESCRIPTION TEXT, CHOICE BOOL, PROGDATE DATE, STARTTIME TIME, ENDTIME TIME,
+                                  DESCRIPTION TEXT, CHOICE BOOL, STARTTIME DATETIME, ENDTIME DATETIME,
                                   DURATION INT, CHANNELID INT NOT NULL, INDEX(PROGTITLE),
                                   INDEX(CHANNELID), INDEX(DIRECTOR), INDEX(GENRENAME), INDEX(SUBTITLE,EPISODE),
                                   INDEX(SUBTITLE), INDEX(EPISODE))""")
@@ -115,7 +116,7 @@ class Processing:
                                       FOREIGN KEY (DIRECTORID) REFERENCES DIRECTOR(DIRECTORID)
                                   ) ENGINE=INNODB""")
 
-          self._cursor.execute("""CREATE TABLE IF NOT EXISTS PROG_PERFORMER (
+          self._cursor.execute("""CREATE TABLE IF NOT EXISTS PROG_EP_PERF (
                                       PROGRAMMEID INT NOT NULL, EPISODEID INT NOT NULL, PERFORMERID INT NOT NULL,
                                       FOREIGN KEY (PROGRAMMEID) REFERENCES PROGRAMME(PROGRAMMEID),
                                       FOREIGN KEY (EPISODEID) REFERENCES EPISODE(EPISODEID), FOREIGN KEY (PERFORMERID) REFERENCES PERFORMER(PERFORMERID),
@@ -126,7 +127,7 @@ class Processing:
                                       CHANNELPROGRAMMEID INT NOT NULL AUTO_INCREMENT, CHANNELID INT NOT NULL,
                                       PROGRAMMEID INT NOT NULL, EPISODEID INT NOT NULL, RPEAT BOOL, NEWSERIES BOOL,
                                       PREMIERE BOOL, CHOICE BOOL, SUBTITLES BOOL, DEAFSIGNED BOOL, STARRATING TINYINT,
-                                      PROGDATE DATE, STARTTIME TIME, ENDTIME TIME, DURATION INT, PRIMARY KEY(CHANNELPROGRAMMEID),
+                                      STARTTIME DATETIME, ENDTIME DATETIME, DURATION INT, PRIMARY KEY(CHANNELPROGRAMMEID),
                                       INDEX (CHANNELID), FOREIGN KEY (CHANNELID) REFERENCES CHANNELS(CHANNELID), INDEX (PROGRAMMEID),
                                       FOREIGN KEY (PROGRAMMEID) REFERENCES PROGRAMME(PROGRAMMEID), INDEX (EPISODEID),
                                       FOREIGN KEY (EPISODEID) REFERENCES EPISODE(EPISODEID)
@@ -135,7 +136,7 @@ class Processing:
           processing._logger.error('Error during environment setup: ' +str(e))
           sys.exit(1)
 
-   def BufferFiles(self):
+   def bufferFiles(self):
       try:
          # First buffer the list of channels
          channelData = "channels.dat"
@@ -164,14 +165,14 @@ class Processing:
           processing._logger.error('Error during download files: ' +str(e))
           sys.exit(1)
 
-   def ClearTable(self):
+   def clearTable(self):
       try:
          self._cursor.execute("""TRUNCATE TABLE CHANNELPROGRAMME""")
       except MySQLdb.Error, e:
          processing._logger.error('Error during clear table: ' +str(e))
          sys.exit(1)
 
-   def LoadProgData(self,datFile):
+   def loadProgData(self,datFile):
       try:
          fields = ["PROGTITLE", "SUBTITLE", "EPISODE", "YEAR", "DIRECTOR", "PERFORMERS",
                    "PREMIERE", "FILM", "RPEAT", "SUBTITLES", "WIDESCREEN", "NEWSERIES",
@@ -203,7 +204,7 @@ class Processing:
          sys.exit(1)
 
 
-   def LoadDBData(self):
+   def loadDBData(self):
        try:
           #Load channel name data
           columns = []
@@ -221,24 +222,23 @@ class Processing:
                              PREMIERE, FILM, RPEAT, SUBTITLES,
                              WIDESCREEN, NEWSERIES, DEAFSIGNED,
                              BNW, STARRATING, CERTIFICATE, GENRENAME,
-                             DESCRIPTION, CHOICE, PROGDATE,
+                             DESCRIPTION, CHOICE, 
                              STARTTIME, ENDTIME, DURATION, CHANNELID)
-                         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-
-          columns = [(row["PROGTITLE"],row["SUBTITLE"],row["EPISODE"],self.FormatVal(row["YEAR"]),row["DIRECTOR"],
-                      row["PERFORMERS"],self.FormatBool(row["PREMIERE"]),self.FormatBool(row["FILM"]),
-                      self.FormatBool(row["RPEAT"]),self.FormatBool(row["SUBTITLES"]),
-                      self.FormatBool(row["WIDESCREEN"]),self.FormatBool(row["NEWSERIES"]),
-                      self.FormatBool(row["DEAFSIGNED"]),self.FormatBool(row["BNW"]),self.FormatVal(row["STARRATING"]),
-                      row["CERTIFICATE"],row["GENRE"],row["DESCRIPTION"],self.FormatBool(row["CHOICE"]),
-                      self.FormatDate(row["DATE"]),row["STARTTIME"]+":00",row["ENDTIME"]+":00",
-                      row["DURATION"],row["CHANNELID"]) for row in self._channelPrograms ]
-          self.BatchExecute(sqlString, columns, 25)
+                         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+          
+          columns = [(row["PROGTITLE"],row["SUBTITLE"],row["EPISODE"],self.formatVal(row["YEAR"]),row["DIRECTOR"],
+                      row["PERFORMERS"],self.formatBool(row["PREMIERE"]),self.formatBool(row["FILM"]),
+                      self.formatBool(row["RPEAT"]),self.formatBool(row["SUBTITLES"]),
+                      self.formatBool(row["WIDESCREEN"]),self.formatBool(row["NEWSERIES"]),
+                      self.formatBool(row["DEAFSIGNED"]),self.formatBool(row["BNW"]),self.formatVal(row["STARRATING"]),
+                      row["CERTIFICATE"],row["GENRE"],row["DESCRIPTION"],self.formatBool(row["CHOICE"]),
+                      self.formatDate(row["DATE"], row["STARTTIME"]),self.checkEndDate(self.formatDate(row["DATE"], row["STARTTIME"]), self.formatDate(row["DATE"], row["ENDTIME"])),row["DURATION"],row["CHANNELID"]) for row in self._channelPrograms ]
+          self.batchExecute(sqlString, columns, 25)
        except MySQLdb.Error, e:
           processing._logger.error('Error during load prog data: ' +str(e))
           sys.exit(1)
 
-   def UpdateChannels(self):
+   def updateChannels(self):
        try:
           sqlString = """INSERT INTO CHANNELS(CHANNELID,CHANNELNAME)
                          SELECT
@@ -253,7 +253,7 @@ class Processing:
           processing._logger.error('Error during update channels: ' +str(e))
           sys.exit(1)
 
-   def UpdateGenres(self):
+   def updateGenres(self):
        try:
           sqlString = """INSERT INTO GENRE (GENRENAME)
                          SELECT DISTINCT
@@ -269,7 +269,7 @@ class Processing:
           processing._logger.error('Error during update genres: ' +str(e))
           sys.exit(1)
 
-   def UpdateDirectors(self):
+   def updateDirectors(self):
        try:
           sqlString = """INSERT INTO DIRECTOR (DIRECTOR)
                          SELECT DISTINCT
@@ -285,7 +285,7 @@ class Processing:
           processing._logger.error('Error during update directors: ' +str(e))
           sys.exit(1)
    
-   def UpdatePerformers(self):
+   def updatePerformers(self):
        try:
           selectSQL = "SELECT * FROM PERFORMER P WHERE P.PERFORMER = %s"
           sqlString = """INSERT IGNORE INTO PERFORMER (PERFORMER)
@@ -300,7 +300,7 @@ class Processing:
           processing._logger.error('Error during update directors: ' +str(e))
           sys.exit(1)
 
-   def UpdateProgrammes(self):
+   def updateProgrammes(self):
        try:
           sqlString = """INSERT INTO PROGRAMME (
                              PROGTITLE, GENREID, DIRECTORID, YR, FILM, WIDESCREEN, BNW,
@@ -322,7 +322,7 @@ class Processing:
           processing._logger.error('Error during update programmes: ' +str(e))
           sys.exit(1)
 
-   def UpdateEpisodes(self):
+   def updateEpisodes(self):
        try:
           sqlString = """INSERT INTO EPISODE (
                              SUBTITLE, EPISODE, PROGRAMMEID, DIRECTORID, DESCRIPTION)
@@ -342,17 +342,17 @@ class Processing:
           processing._logger.error('Error during update episodes: ' +str(e))
           sys.exit(1)
 
-   def UpdateChanProgs(self):
+   def updateChanProgs(self):
       try:
           sqlString = """INSERT INTO CHANNELPROGRAMME (
                              CHANNELID, PROGRAMMEID, EPISODEID,
                              RPEAT, NEWSERIES, PREMIERE, CHOICE, SUBTITLES,
-                             DEAFSIGNED, STARRATING, PROGDATE, STARTTIME, ENDTIME,
+                             DEAFSIGNED, STARRATING, STARTTIME, ENDTIME,
                              DURATION)
                          SELECT
                              T.CHANNELID, P.PROGRAMMEID, E.EPISODEID, T.RPEAT, T.NEWSERIES,
                              T.PREMIERE, T.CHOICE, T.SUBTITLES, T.DEAFSIGNED, T.STARRATING,
-                             T.PROGDATE, T.STARTTIME, T.ENDTIME, T.DURATION
+                             T.STARTTIME, T.ENDTIME, T.DURATION
                          FROM
                              TVTEMPTABLE T
                              INNER JOIN PROGRAMME P ON P.PROGTITLE=T.PROGTITLE
@@ -364,7 +364,7 @@ class Processing:
           processing._logger.error('Error during update channel programmes: ' +str(e))
           sys.exit(1)
    
-   def UpdateProgPerformers(self):
+   def updateProgPerformers(self):
       try:
           data = []
           for k,v in self._progPerformers.iteritems():
@@ -376,7 +376,7 @@ class Processing:
               for performer in performers:
                   actor = performer.split("*")[1]
                   data.append((prog, actor, ep, sub))
-          sqlString = """INSERT IGNORE INTO PROG_PERFORMER (
+          sqlString = """INSERT IGNORE INTO PROG_EP_PERF (
                             PROGRAMMEID, EPISODEID, PERFORMERID)
                          SELECT
                             P.PROGRAMMEID, E.EPISODEID, PF.PERFORMERID
@@ -387,13 +387,13 @@ class Processing:
                             PF.PERFORMER = %s AND
                             E.EPISODE = %s AND
                             E.SUBTITLE = %s """
-          self.BatchExecute(sqlString, data, 25)
+          self.batchExecute(sqlString, data, 25)
           self._dbase.commit()
       except MySQLdb.Error, e:
           processing._logger.error('Error during update channel programmes: ' +str(e))
           sys.exit(1)
 
-   def BatchExecute(self, sqlString, data, batchSize):
+   def batchExecute(self, sqlString, data, batchSize):
        end_index = len(data) - 1
        start = 0
        end = batchSize - 1
@@ -406,16 +406,24 @@ class Processing:
            else:
                end = end_index
    
-   def FormatDate(self,date):
-      return date[6:10] +"-" +date[3:5] + "-" +date[0:2]
+   def checkEndDate(self, startDate, endDate):
+       sd = datetime.strptime(startDate, "%Y-%m-%d %H:%M:%S")
+       ed = datetime.strptime(endDate, "%Y-%m-%d %H:%M:%S")
+       if ed > sd:
+           return str(ed)
+       else:
+           return str(ed + timedelta(days=1))
+   
+   def formatDate(self, date, time):
+      return date[6:10] +"-" +date[3:5] + "-" +date[0:2] + " " +time + ":00"
 
-   def FormatBool(self,val):
+   def formatBool(self,val):
       return "1" if val=="true" else "0"
 
-   def FormatVal(self,val):
+   def formatVal(self,val):
        return val if val != "null" and val else "0"
 
-   def CloseDB(self):
+   def closeDB(self):
       try:
          #Code to close connection to MySQL database
          self._cursor.close()
@@ -426,17 +434,17 @@ class Processing:
 
 if __name__ == '__main__':
    processing = Processing()
-   processing.SetupEnvironment()
+   processing.setupEnvironment()
    tStart = time.time()
    totTime = tStart
-   processing.BufferFiles()
+   processing.bufferFiles()
    print "Time to buffer files = " + str((time.time() - tStart))
 
    if len(processing._progFiles)>0:
-      processing.ClearTable()
+      processing.clearTable()
    else:
-      processing._cursor.execute("""DELETE FROM CHANNELPROGRAMME WHERE PROGDATE < CURDATE()""")
-      processing.CloseDB()
+      processing._cursor.execute("""DELETE FROM CHANNELPROGRAMME WHERE STARTTIME < CURDATE()""")
+      processing.closeDB()
       processing._logger.error('NO CHANNEL DATA, EXITING PROCESS')
       sys.exit(1)
 
@@ -445,47 +453,47 @@ if __name__ == '__main__':
    for i in range(len(processing._progFiles)):
       tempDict = processing._progFiles[i]
       channelFile = tempDict["CHANNELID"]
-      processing.LoadProgData(channelFile+'.dat')
+      processing.loadProgData(channelFile+'.dat')
 
    print "Time to buffer data = " + str((time.time() - tStart))
 
    tStart = time.time()
-   processing.LoadDBData()
+   processing.loadDBData()
    print "Time to load temp data = " + str((time.time() - tStart))
 
    tStart = time.time()
-   processing.UpdateChannels()
+   processing.updateChannels()
    print "Time to update channels = " + str((time.time() - tStart))
 
    tStart = time.time()
-   processing.UpdateGenres()
+   processing.updateGenres()
    print "Time to update genres = " + str((time.time() - tStart))
 
    tStart = time.time()
-   processing.UpdateDirectors()
+   processing.updateDirectors()
    print "Time to update directors = " + str((time.time() - tStart))
    
    tStart = time.time()
-   processing.UpdatePerformers()
+   processing.updatePerformers()
    print "Time to update performers = " + str((time.time() - tStart))
 
    tStart = time.time()
-   processing.UpdateProgrammes()
+   processing.updateProgrammes()
    print "Time to update programmes = " + str((time.time() - tStart))
 
    tStart = time.time()
-   processing.UpdateEpisodes()
+   processing.updateEpisodes()
    print "Time to update episodes = " + str((time.time() - tStart))
 
    tStart = time.time()
-   processing.UpdateChanProgs()
+   processing.updateChanProgs()
    print "Time to update chanprogs = " + str((time.time() - tStart))
    
    tStart = time.time()
-   processing.UpdateProgPerformers()
+   processing.updateProgPerformers()
    print "Time to update progperformers = " + str((time.time() - tStart))
    print "TOTAL TIME = " + str((time.time() - totTime))
 
-   processing.CloseDB()
+   processing.closeDB()
 
    sys.exit(0)

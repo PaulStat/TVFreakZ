@@ -12,14 +12,16 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.xml.FlatDtdDataSet;
 
 public class DatabaseExportSample {
-  
-  public static void main(String[] args) throws Exception {  
-      
-      Connection jdbcConnection = DriverManager.getConnection("jdbc:mysql://172.28.84.209:3306/tvlistings", "test", "test");
-      IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
 
-      // write DTD file
-      FlatDtdDataSet.write(connection.createDataSet(), new FileOutputStream("c:\\temp\\test.dtd"));
-  }
+    public static void main(String[] args) throws Exception {
+
+        Connection jdbcConnection = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/tvlistings", "test", "test");
+        IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
+
+        // write DTD file
+        FlatDtdDataSet.write(connection.createDataSet(), new FileOutputStream(
+                "c:\\temp\\test.dtd"));
+    }
 
 }

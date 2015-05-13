@@ -21,27 +21,27 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.tvfreakz.model.entity.Director;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/config/testMVCContext.xml"})
+@ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/config/testMVCContext.xml" })
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
-  DirtiesContextTestExecutionListener.class,
-  TransactionalTestExecutionListener.class,
-  DbUnitTestExecutionListener.class })
+        DirtiesContextTestExecutionListener.class,
+        TransactionalTestExecutionListener.class,
+        DbUnitTestExecutionListener.class })
 @DatabaseSetup("testDataset.xml")
 public class ITDirectorRepositoryTest {
-  
-  @Autowired
-  private DirectorRepository repository;
-  
-  @Test
-  public void testFindByDirectorIdWhenNoDirectorFound() {
-    Director director = repository.findByDirectorId(10L);
-    assertNull(director);
-  }
-  
-  @Test
-  public void testFindByDirectorIdWhendirectorIsFound() {
-    Director director = repository.findByDirectorId(1L);
-    assertEquals("Ridley Scott", director.getDirectorName());
-  }
+
+    @Autowired
+    private DirectorRepository repository;
+
+    @Test
+    public void testFindByDirectorIdWhenNoDirectorFound() {
+        Director director = repository.findByDirectorId(10L);
+        assertNull(director);
+    }
+
+    @Test
+    public void testFindByDirectorIdWhenDirectorIsFound() {
+        Director director = repository.findByDirectorId(1L);
+        assertEquals("Ridley Scott", director.getDirectorName());
+    }
 
 }
